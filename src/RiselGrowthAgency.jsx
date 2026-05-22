@@ -1,513 +1,722 @@
 import { useState, useEffect, useRef } from "react";
 
-// ─── CSS injected as a style tag ───────────────────────────────────────────
+// ─── CSS ────────────────────────────────────────────────────────────────────
 const STYLES = `
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=DM+Serif+Display:ital@0;1&display=swap');
 
 :root {
-  --accent: #2563eb;       /* Royal Blue */
-  --dark: #0f172a;         /* Slate 900 */
-  --mid: #475569;          /* Slate 600 */
-  --muted: #94a3b8;        /* Slate 400 */
-  --gold: #b45309;         /* Premium Amber/Gold for contrast */
-  --green: #15803d;        /* Emerald Green */
-  --border: #e2e8f0;       /* Slate 200 */
-  --bg: #ffffff;           /* Pure White */
-  --white: #ffffff;
-
-  /* Premium Light Theme Color Map */
-  --tp: #0f172a;           /* Text Primary */
-  --tm: #475569;           /* Text Muted / Body */
-  --bn: #e2e8f0;           /* Border Color */
-  --bd: #ffffff;           /* Button Text */
-  --bc: #ffffff;           /* Card Background */
-  --bk: #f8fafc;           /* Footer / Alternate backgrounds */
+  --primary: #1e3a5f;
+  --primary-light: #2a5a8f;
+  --accent: #ff6b35;
+  --accent-light: #ff8c5a;
+  --accent-glow: rgba(255, 107, 53, 0.15);
+  --dark: #0d1b2a;
+  --text: #334155;
+  --text-light: #64748b;
+  --text-dark: #1e293b;
+  --bg: #ffffff;
+  --bg-warm: #faf8f5;
+  --bg-section: #f8f6f3;
+  --border: #e8e4df;
+  --green: #10b981;
+  --green-bg: rgba(16, 185, 129, 0.08);
+  --card-shadow: 0 4px 24px rgba(0,0,0,0.06);
+  --card-shadow-hover: 0 12px 40px rgba(0,0,0,0.12);
+  --radius: 16px;
+  --radius-sm: 10px;
+  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 
 body {
-  font-family: 'Inter', sans-serif;
-  background-color: var(--bg);
-  color: var(--tm);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
   overflow-x: hidden;
-  cursor: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* ── Custom Cursor ── */
-.rga-cursor {
-  width: 12px; height: 12px;
-  background: var(--accent);
-  border-radius: 50%;
-  position: fixed; top: 0; left: 0;
-  pointer-events: none; z-index: 99999;
-  box-shadow: 0 0 10px var(--accent);
-  transform: translate(-6px, -6px);
-  transition: transform 0.05s linear;
-}
-.rga-cursor-ring {
-  width: 36px; height: 36px;
-  border: 1.5px solid rgba(37, 99, 235, 0.4);
-  border-radius: 50%;
-  position: fixed; top: 0; left: 0;
-  pointer-events: none; z-index: 99998;
-  transform: translate(-18px, -18px);
-  transition: width 0.2s, height 0.2s, border-color 0.2s;
-}
-.rga-cursor-ring.expanded {
-  width: 54px; height: 54px; border-color: var(--accent);
-  transform: translate(-27px, -27px);
+/* ─── Typography ─── */
+.rga-heading {
+  font-family: 'DM Serif Display', Georgia, serif;
+  color: var(--text-dark);
+  line-height: 1.15;
 }
 
-/* ── CRT Scanlines overlay ── */
-.rga-scanlines {
-  position: fixed; inset: 0;
-  background: repeating-linear-gradient(
-    0deg, transparent, transparent 2px,
-    rgba(15, 23, 42, 0.003) 2px, rgba(15, 23, 42, 0.003) 4px
-  );
-  pointer-events: none; z-index: 9999;
+/* ─── Container ─── */
+.rga-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
 }
 
-/* ── Moving Grid ── */
-.rga-grid-bg {
-  position: fixed; inset: 0;
-  background-image:
-    linear-gradient(rgba(15, 23, 42, 0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(15, 23, 42, 0.02) 1px, transparent 1px);
-  background-size: 60px 60px;
-  animation: gridMove 20s linear infinite;
-  pointer-events: none; z-index: 0;
-}
-@keyframes gridMove { to { transform: translateY(60px); } }
-
-/* ── Particles ── */
-.rga-particle {
-  position: absolute; width: 2px; height: 2px;
-  border-radius: 50%;
-  animation: floatParticle linear infinite;
-}
-@keyframes floatParticle {
-  0%   { transform: translateY(100vh) translateX(0); opacity: 0; }
-  10%  { opacity: 1; }
-  90%  { opacity: 1; }
-  100% { transform: translateY(-100px) translateX(var(--drift)); opacity: 0; }
-}
-
-/* ── Run Lines ── */
-.rga-run-line {
-  position: absolute; width: 1px; height: 120px;
-  animation: runDown linear infinite; opacity: 0.5;
-}
-@keyframes runDown {
-  0%   { top: -150px; opacity: 0; }
-  10%  { opacity: 0.5; }
-  90%  { opacity: 0.5; }
-  100% { top: 110%; opacity: 0; }
-}
-
-/* ── Navbar ── */
+/* ─── Navbar ─── */
 .rga-nav {
   position: fixed; top: 0; width: 100%; z-index: 1000;
-  padding: 0 4rem; height: 70px;
+  padding: 0 40px; height: 72px;
   display: flex; align-items: center; justify-content: space-between;
-  background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--bn);
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(232,228,223,0.7);
+  transition: var(--transition);
 }
-.rga-nav::after {
-  content: ''; position: absolute; bottom: 0; left: 0;
-  width: 100%; height: 1px;
-  background: linear-gradient(90deg, transparent, var(--accent), var(--dark), var(--gold), transparent);
-  animation: navGlow 3s ease-in-out infinite;
+.rga-nav.scrolled {
+  box-shadow: 0 2px 20px rgba(0,0,0,0.06);
 }
-@keyframes navGlow { 0%,100% { opacity: 0.4; } 50% { opacity: 1; } }
 
-.rga-logo { display: flex; align-items: center; gap: 14px; text-decoration: none; }
-.rga-logo-img {
-  width: 46px; height: 46px; border-radius: 10px; object-fit: cover;
-  border: 1.5px solid var(--accent);
-  box-shadow: 0 0 15px rgba(37,99,235,0.25), 0 0 30px rgba(37,99,235,0.08);
-  animation: logoPulse 2.5s ease-in-out infinite;
+.rga-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+.rga-logo-mark {
+  width: 44px; height: 44px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: #fff; font-family: 'DM Serif Display', serif;
+  font-size: 20px; font-weight: 400;
+  box-shadow: 0 4px 12px rgba(255,107,53,0.25);
+  transition: var(--transition);
 }
-@keyframes logoPulse {
-  0%,100% { box-shadow: 0 0 15px rgba(37,99,235,0.25), 0 0 30px rgba(37,99,235,0.08); }
-  50%      { box-shadow: 0 0 25px rgba(37,99,235,0.45), 0 0 50px rgba(37,99,235,0.15); }
+.rga-logo:hover .rga-logo-mark { transform: scale(1.05); }
+.rga-logo-text {
+  font-family: 'DM Serif Display', serif; font-size: 20px;
+  color: var(--text-dark); letter-spacing: -0.3px;
 }
-.rga-logo-text { font-family: 'Playfair Display', serif; font-size:13px; font-weight:700; color:var(--tp); letter-spacing:2px; line-height:1.2; }
-.rga-logo-sub  { font-size:9px; color:var(--accent); letter-spacing:4px; }
+.rga-logo-sub {
+  font-size: 11px; color: var(--accent); letter-spacing: 1.5px;
+  font-weight: 600; text-transform: uppercase; margin-top: -2px;
+}
 
-.rga-nav-links { display:flex; gap:36px; list-style:none; }
+.rga-nav-links {
+  display: flex; gap: 32px; list-style: none; align-items: center;
+}
 .rga-nav-links a {
-  font-family: 'Inter', sans-serif; font-size:13px; font-weight:600;
-  letter-spacing:3px; color:var(--tm); text-decoration:none;
-  text-transform:uppercase; position:relative; transition:color 0.3s;
+  font-size: 14px; font-weight: 500; color: var(--text);
+  text-decoration: none; position: relative; transition: color var(--transition);
+  padding: 4px 0;
 }
 .rga-nav-links a::after {
-  content:''; position:absolute; bottom:-4px; left:0;
-  width:0; height:1px; background:var(--accent);
-  transition:width 0.3s; box-shadow:0 0 8px var(--accent);
+  content: ''; position: absolute; bottom: -2px; left: 0;
+  width: 0; height: 2px; background: var(--accent);
+  border-radius: 1px; transition: width var(--transition);
 }
-.rga-nav-links a:hover { color:var(--accent); }
-.rga-nav-links a:hover::after { width:100%; }
+.rga-nav-links a:hover { color: var(--accent); }
+.rga-nav-links a:hover::after { width: 100%; }
 
 .rga-nav-cta {
-  padding:8px 22px; border:1px solid var(--accent);
-  color:var(--accent); background:transparent;
-  font-family:'Orbitron',sans-serif; font-size:10px;
-  letter-spacing:2px; cursor:pointer;
-  transition:all 0.3s; text-transform:uppercase;
+  padding: 10px 24px; border-radius: 50px;
+  background: linear-gradient(135deg, var(--accent), #e85d2c);
+  color: #fff; font-size: 14px; font-weight: 600;
+  border: none; cursor: pointer; transition: var(--transition);
+  box-shadow: 0 4px 14px rgba(255,107,53,0.3);
 }
-.rga-nav-cta:hover { background:rgba(37,99,235,0.08); box-shadow:0 0 20px rgba(37,99,235,0.2); }
+.rga-nav-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255,107,53,0.4);
+}
 
-/* ── Hero ── */
+/* Hamburger */
+.rga-hamburger {
+  display: none; flex-direction: column; gap: 5px;
+  background: none; border: none; cursor: pointer; padding: 6px;
+  z-index: 1001;
+}
+.rga-hamburger span {
+  display: block; width: 24px; height: 2px;
+  background: var(--text-dark); border-radius: 2px;
+  transition: var(--transition);
+}
+.rga-hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+.rga-hamburger.open span:nth-child(2) { opacity: 0; }
+.rga-hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+/* Mobile nav overlay */
+.rga-mobile-overlay {
+  display: none; position: fixed; inset: 0; z-index: 999;
+  background: rgba(255,255,255,0.98);
+  backdrop-filter: blur(20px);
+  flex-direction: column; align-items: center; justify-content: center; gap: 28px;
+  opacity: 0; pointer-events: none; transition: opacity 0.3s;
+}
+.rga-mobile-overlay.open { opacity: 1; pointer-events: all; }
+.rga-mobile-overlay a {
+  font-size: 22px; font-weight: 600; color: var(--text-dark);
+  text-decoration: none; transition: color var(--transition);
+}
+.rga-mobile-overlay a:hover { color: var(--accent); }
+
+/* ─── Hero ─── */
 .rga-hero {
-  position:relative; min-height:100vh;
-  display:flex; align-items:center;
-  padding:0 4rem; overflow:hidden; z-index:2;
+  position: relative; min-height: 100vh; display: flex; align-items: center;
+  padding: 120px 40px 80px; overflow: hidden;
+  background: linear-gradient(165deg, #faf8f5 0%, #fff 40%, #fef3ed 100%);
 }
-.rga-hero-content { position:relative; z-index:3; max-width:700px; padding-top:70px; }
-.rga-hero-tag {
-  display:inline-flex; align-items:center; gap:8px;
-  padding:6px 16px; border:1px solid rgba(37, 99, 235, 0.2);
-  background:rgba(37, 99, 235, 0.05);
-  font-family:'Share Tech Mono',monospace; font-size:11px;
-  color:var(--accent); letter-spacing:2px; margin-bottom:30px;
-  animation:fadeInUp 0.6s ease both;
+.rga-hero-inner {
+  max-width: 1200px; margin: 0 auto; width: 100%;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 60px; align-items: center;
 }
-.rga-dot { width:6px; height:6px; background:var(--green); border-radius:50%; animation:blink 1s step-end infinite; }
-@keyframes blink { 0%,100% { opacity:1; } 50% { opacity:0; } }
+.rga-hero-content { position: relative; z-index: 2; }
+
+.rga-hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 8px 18px; border-radius: 50px;
+  background: var(--accent-glow); border: 1px solid rgba(255,107,53,0.2);
+  font-size: 13px; font-weight: 600; color: var(--accent);
+  margin-bottom: 28px; animation: fadeInUp 0.6s ease both;
+}
+.rga-hero-badge-dot {
+  width: 7px; height: 7px; background: var(--green);
+  border-radius: 50%; animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 
 .rga-hero-title {
-  font-family:'Orbitron',sans-serif;
-  font-size:clamp(34px,5vw,66px); font-weight:900;
-  line-height:1.05; margin-bottom:24px;
-  animation:fadeInUp 0.7s 0.1s ease both;
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(38px, 5.5vw, 64px); font-weight: 400;
+  line-height: 1.1; color: var(--text-dark);
+  margin-bottom: 24px; animation: fadeInUp 0.7s 0.1s ease both;
 }
-.rga-hero-title .line1 { color:var(--tp); display:block; }
-.rga-hero-title .line2 {
-  display:block;
-  background:linear-gradient(135deg,var(--accent),var(--dark));
-  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
-}
-.rga-glitch { animation:glitch 5s infinite; }
-@keyframes glitch {
-  0%,88%,100% { text-shadow:none; }
-  90%  { text-shadow:-2px 0 var(--gold), 2px 0 var(--accent); }
-  92%  { text-shadow: 2px 0 var(--gold),-2px 0 var(--accent); }
-  94%  { text-shadow:none; }
-  97%  { text-shadow:-1px 0 var(--dark), 1px 0 var(--green); }
+.rga-hero-title .highlight {
+  background: linear-gradient(135deg, var(--accent), #e85d2c);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .rga-hero-sub {
-  font-size:17px; color:var(--tm); line-height:1.7;
-  margin-bottom:48px; max-width:560px;
-  animation:fadeInUp 0.7s 0.2s ease both;
+  font-size: 17px; color: var(--text-light); line-height: 1.75;
+  margin-bottom: 40px; max-width: 500px;
+  animation: fadeInUp 0.7s 0.2s ease both;
 }
-.rga-hero-btns { display:flex; gap:20px; flex-wrap:wrap; animation:fadeInUp 0.7s 0.3s ease both; }
-
+.rga-hero-btns {
+  display: flex; gap: 16px; flex-wrap: wrap;
+  animation: fadeInUp 0.7s 0.3s ease both;
+}
 .rga-btn-primary {
-  padding:14px 36px;
-  background:linear-gradient(135deg,var(--accent),var(--dark));
-  color:var(--bd); font-family:'Orbitron',sans-serif;
-  font-size:12px; font-weight:700; letter-spacing:2px;
-  text-transform:uppercase; border:none; cursor:pointer;
-  clip-path:polygon(10px 0,100% 0,calc(100% - 10px) 100%,0 100%);
-  transition:all 0.3s; animation:floatBtn 3s ease-in-out infinite;
+  padding: 14px 32px; border-radius: 50px;
+  background: linear-gradient(135deg, var(--accent), #e85d2c);
+  color: #fff; font-size: 15px; font-weight: 600;
+  border: none; cursor: pointer; transition: var(--transition);
+  box-shadow: 0 4px 16px rgba(255,107,53,0.3);
 }
-.rga-btn-primary:hover { box-shadow:0 10px 25px rgba(37,99,235,0.3); animation:none; transform:scale(1.04); }
+.rga-btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 28px rgba(255,107,53,0.4);
+}
 .rga-btn-secondary {
-  padding:14px 36px; background:transparent; color:var(--accent);
-  font-family:'Orbitron',sans-serif; font-size:12px; font-weight:600;
-  letter-spacing:2px; text-transform:uppercase;
-  border:1px solid var(--accent); cursor:pointer;
-  clip-path:polygon(10px 0,100% 0,calc(100% - 10px) 100%,0 100%);
-  transition:all 0.3s;
+  padding: 14px 32px; border-radius: 50px;
+  background: transparent; color: var(--text-dark);
+  font-size: 15px; font-weight: 600;
+  border: 2px solid var(--border); cursor: pointer;
+  transition: var(--transition);
 }
-.rga-btn-secondary:hover { background:rgba(37,99,235,0.06); box-shadow:0 0 20px rgba(37,99,235,0.15); }
-@keyframes floatBtn { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-6px); } }
-@keyframes fadeInUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+.rga-btn-secondary:hover {
+  border-color: var(--accent); color: var(--accent);
+  background: var(--accent-glow);
+}
 
-/* ── Orb ── */
+/* Hero visual */
 .rga-hero-visual {
-  position:absolute; right:0; top:50%; transform:translateY(-50%);
-  width:52vw; height:100vh; z-index:2;
-  display:flex; align-items:center; justify-content:center;
+  position: relative; display: flex; align-items: center;
+  justify-content: center; animation: fadeInUp 0.8s 0.3s ease both;
 }
-.rga-hero-orb { width:480px; height:480px; position:relative; }
-.rga-orb-core {
-  position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
-  width:170px; height:170px; border-radius:50%;
-  background:radial-gradient(circle,rgba(37,99,235,0.15),rgba(79,70,229,0.1),transparent);
-  border:1px solid rgba(37,99,235,0.25);
-  animation:orbPulse 3s ease-in-out infinite;
+.rga-hero-graphic {
+  width: 100%; max-width: 500px; aspect-ratio: 1;
+  position: relative;
 }
-@keyframes orbPulse {
-  0%,100% { transform:translate(-50%,-50%) scale(1); opacity:0.8; }
-  50%      { transform:translate(-50%,-50%) scale(1.1); opacity:1; }
+.rga-hero-circle {
+  position: absolute; border-radius: 50%;
+  border: 1.5px solid; animation: float 6s ease-in-out infinite;
 }
-.rga-orb-ring {
-  position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
-  border-radius:50%; border:1px solid transparent;
+.rga-hero-circle-1 {
+  width: 100%; height: 100%; border-color: rgba(255,107,53,0.15);
+  animation-delay: 0s;
 }
-.rga-orb-ring:nth-child(1) { width:240px; height:240px; border-top-color:var(--accent); border-right-color:rgba(37,99,235,0.15); animation:spin 8s linear infinite; }
-.rga-orb-ring:nth-child(2) { width:330px; height:330px; border-top-color:var(--dark); border-right-color:rgba(79,70,229,0.15); animation:spinR 12s linear infinite; }
-.rga-orb-ring:nth-child(3) { width:430px; height:430px; border-top-color:var(--gold); border-right-color:rgba(180,83,9,0.15); animation:spin 18s linear infinite; }
-@keyframes spin  { to { transform:translate(-50%,-50%) rotate(360deg); } }
-@keyframes spinR { to { transform:translate(-50%,-50%) rotate(-360deg); } }
+.rga-hero-circle-2 {
+  width: 80%; height: 80%; top: 10%; left: 10%;
+  border-color: rgba(30,58,95,0.1); animation-delay: -2s;
+}
+.rga-hero-circle-3 {
+  width: 60%; height: 60%; top: 20%; left: 20%;
+  border-color: rgba(255,107,53,0.1); animation-delay: -4s;
+}
+.rga-hero-center-icon {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 120px; height: 120px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 20px 60px rgba(255,107,53,0.2);
+}
+.rga-hero-center-icon svg { width: 50px; height: 50px; }
 
-.rga-orb-dot {
-  position:absolute; width:8px; height:8px; border-radius:50%;
+/* Floating badges on hero graphic */
+.rga-float-badge {
+  position: absolute; padding: 10px 18px;
+  background: #fff; border-radius: var(--radius-sm);
+  box-shadow: var(--card-shadow); display: flex;
+  align-items: center; gap: 10px; font-size: 13px;
+  font-weight: 600; color: var(--text-dark);
+  animation: floatBadge 4s ease-in-out infinite;
+  white-space: nowrap;
+}
+.rga-float-badge-icon {
+  width: 32px; height: 32px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+}
+@keyframes float {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.03); }
+}
+@keyframes floatBadge {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-/* ── Stats Bar ── */
-.rga-stats-bar {
-  position:relative; z-index:10;
-  background:rgba(37, 99, 235, 0.02);
-  border-top:1px solid var(--bn); border-bottom:1px solid var(--bn);
-  padding:30px 4rem;
-  display:grid; grid-template-columns:repeat(4,1fr);
+/* ─── Stats ─── */
+.rga-stats {
+  position: relative; z-index: 10;
+  padding: 48px 40px;
+  background: var(--dark);
 }
-.rga-stat-item { text-align:center; padding:20px; position:relative; }
-.rga-stat-item:not(:last-child)::after {
-  content:''; position:absolute; right:0; top:20%; height:60%; width:1px;
-  background:linear-gradient(transparent,var(--bn),transparent);
+.rga-stats-inner {
+  max-width: 1200px; margin: 0 auto;
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px;
+}
+.rga-stat {
+  text-align: center; padding: 20px;
+  position: relative;
+}
+.rga-stat:not(:last-child)::after {
+  content: ''; position: absolute; right: 0; top: 20%; height: 60%;
+  width: 1px; background: rgba(255,255,255,0.1);
 }
 .rga-stat-number {
-  font-family:'Orbitron',sans-serif; font-size:38px; font-weight:700;
-  background:linear-gradient(135deg,var(--accent),var(--dark));
-  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
-  display:block;
+  font-family: 'DM Serif Display', serif;
+  font-size: 42px; color: #fff; display: block;
+  margin-bottom: 4px;
 }
-.rga-stat-label { font-size:12px; color:var(--tm); letter-spacing:2px; text-transform:uppercase; margin-top:6px; font-weight:500; }
-
-/* ── Marquee ── */
-.rga-marquee-wrap {
-  position:relative; z-index:10; overflow:hidden; padding:16px 0;
-  background:linear-gradient(135deg,rgba(37, 99, 235, 0.03),rgba(79, 70, 229, 0.03));
-  border-top:1px solid rgba(37, 99, 235, 0.1); border-bottom:1px solid rgba(37, 99, 235, 0.1);
+.rga-stat-label {
+  font-size: 13px; color: rgba(255,255,255,0.5);
+  letter-spacing: 1px; text-transform: uppercase; font-weight: 500;
 }
-.rga-marquee-track { display:flex; gap:60px; animation:marqueeScroll 22s linear infinite; white-space:nowrap; }
-@keyframes marqueeScroll { 0% { transform:translateX(0); } 100% { transform:translateX(-50%); } }
-.rga-marquee-item {
-  font-family:'Orbitron',sans-serif; font-size:11px; letter-spacing:3px;
-  color:var(--accent); display:flex; align-items:center; gap:12px; flex-shrink:0; opacity:0.7;
+
+/* ─── Section commons ─── */
+.rga-section {
+  position: relative; z-index: 10;
+  padding: 100px 40px;
 }
-.rga-marquee-item::before { content:'◆'; color:var(--dark); font-size:8px; }
-
-/* ── Sections ── */
-.rga-section { position:relative; z-index:10; padding:100px 4rem; }
-.rga-section-header { text-align:center; margin-bottom:70px; }
-.rga-eyebrow { font-family:'Share Tech Mono',monospace; font-size:11px; letter-spacing:4px; color:var(--accent); text-transform:uppercase; margin-bottom:16px; opacity:0.8; }
-.rga-section-title { font-family:'Orbitron',sans-serif; font-size:clamp(26px,3.5vw,44px); font-weight:700; color:var(--tp); line-height:1.15; }
-.rga-section-title span { background:linear-gradient(135deg,var(--accent),var(--dark)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
-.rga-section-desc { margin-top:16px; font-size:16px; color:var(--tm); max-width:560px; margin-left:auto; margin-right:auto; line-height:1.7; }
-
-/* ── Services ── */
-.rga-services-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:22px; margin-bottom:30px; }
-.rga-ai-services-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:22px; }
-.rga-ai-label {
-  font-family:'Share Tech Mono',monospace; font-size:11px; letter-spacing:4px;
-  color:var(--green); margin-bottom:24px; display:flex; align-items:center; gap:12px;
+.rga-section-header {
+  text-align: center; margin-bottom: 64px; max-width: 600px;
+  margin-left: auto; margin-right: auto;
 }
-.rga-ai-label::before, .rga-ai-label::after { content:''; flex:1; height:1px; background:linear-gradient(90deg,transparent,rgba(21,128,61,0.3)); }
+.rga-eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 13px; font-weight: 600; letter-spacing: 2px;
+  color: var(--accent); text-transform: uppercase; margin-bottom: 16px;
+}
+.rga-eyebrow::before, .rga-eyebrow::after {
+  content: ''; width: 24px; height: 1.5px; background: var(--accent);
+  border-radius: 1px;
+}
+.rga-section-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(30px, 4vw, 46px);
+  color: var(--text-dark); line-height: 1.2; margin-bottom: 16px;
+}
+.rga-section-title span {
+  color: var(--accent);
+}
+.rga-section-desc {
+  font-size: 16px; color: var(--text-light); line-height: 1.7;
+}
 
+/* ─── Services ─── */
+.rga-services-grid {
+  max-width: 1200px; margin: 0 auto;
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+}
 .rga-service-card {
-  background:var(--bc); border:1px solid var(--bn);
-  padding:34px 26px; position:relative; overflow:hidden;
-  transition:all 0.4s;
-  clip-path:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,16px 100%,0 calc(100% - 16px));
-  cursor:pointer;
+  background: #fff; border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 32px 28px;
+  transition: var(--transition); cursor: default;
+  position: relative; overflow: hidden;
 }
 .rga-service-card::before {
-  content:''; position:absolute; top:0; left:0; right:0; height:2px;
-  background:linear-gradient(90deg,transparent,var(--card-color, var(--accent)),transparent);
-  transform:translateX(-100%); transition:transform 0.5s;
+  content: ''; position: absolute; top: 0; left: 0; right: 0;
+  height: 3px; background: linear-gradient(90deg, var(--card-accent, var(--accent)), transparent);
+  transform: scaleX(0); transform-origin: left; transition: transform 0.4s;
 }
-.rga-service-card:hover::before { transform:translateX(0); }
+.rga-service-card:hover::before { transform: scaleX(1); }
 .rga-service-card:hover {
-  border-color:var(--card-color, var(--accent));
-  box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.08), inset 0 0 40px rgba(37,99,235,0.015);
-  transform:translateY(-8px);
+  transform: translateY(-6px);
+  box-shadow: var(--card-shadow-hover);
+  border-color: transparent;
 }
-
 .rga-service-icon {
-  width:54px; height:54px; border:1px solid var(--card-color, var(--accent));
-  display:flex; align-items:center; justify-content:center; margin-bottom:22px;
-  clip-path:polygon(8px 0,100% 0,calc(100% - 8px) 100%,0 100%);
-  background:rgba(37, 99, 235, 0.04);
+  width: 56px; height: 56px; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 20px; transition: var(--transition);
 }
-.rga-service-icon svg { width:24px; height:24px; fill:none; stroke-width:1.5; }
-.rga-ai-badge {
-  display:inline-block; padding:3px 10px;
-  background:rgba(21,128,61,0.1); border:1px solid rgba(21,128,61,0.3);
-  color:var(--green); font-family:'Share Tech Mono',monospace; font-size:9px;
-  letter-spacing:2px; margin-bottom:10px;
+.rga-service-icon svg { width: 26px; height: 26px; }
+.rga-service-card:hover .rga-service-icon { transform: scale(1.08); }
+.rga-ai-tag {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 12px; border-radius: 50px;
+  background: var(--green-bg); color: var(--green);
+  font-size: 11px; font-weight: 700; letter-spacing: 0.5px;
+  margin-bottom: 14px;
 }
-.rga-service-name { font-family:'Orbitron',sans-serif; font-size:13px; font-weight:700; letter-spacing:1px; color:var(--tp); margin-bottom:6px; }
-.rga-service-sub { font-size:10px; letter-spacing:3px; text-transform:uppercase; margin-bottom:14px; font-family:'Share Tech Mono',monospace; }
-.rga-service-desc { font-size:13px; color:var(--tm); line-height:1.7; }
+.rga-ai-tag::before {
+  content: ''; width: 5px; height: 5px; background: var(--green);
+  border-radius: 50%;
+}
+.rga-service-name {
+  font-family: 'DM Serif Display', serif; font-size: 20px;
+  color: var(--text-dark); margin-bottom: 6px;
+}
+.rga-service-sub {
+  font-size: 12px; font-weight: 600; letter-spacing: 1px;
+  text-transform: uppercase; margin-bottom: 14px;
+}
+.rga-service-desc {
+  font-size: 14px; color: var(--text-light); line-height: 1.7;
+}
 
-/* ── About ── */
-.rga-about-inner { display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center; }
-.rga-about-heading { font-family:'Orbitron',sans-serif; font-size:clamp(24px,3vw,38px); font-weight:700; color:var(--tp); line-height:1.2; margin-bottom:22px; }
-.rga-about-heading span { color:var(--accent); }
-.rga-about-body { font-size:15px; color:var(--tm); line-height:1.8; margin-bottom:36px; }
-.rga-about-pillars { display:flex; flex-direction:column; gap:18px; }
+.rga-ai-divider {
+  max-width: 1200px; margin: 48px auto;
+  display: flex; align-items: center; gap: 16px;
+  font-size: 13px; font-weight: 600; color: var(--green);
+  letter-spacing: 1.5px;
+}
+.rga-ai-divider::before, .rga-ai-divider::after {
+  content: ''; flex: 1; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(16,185,129,0.3), transparent);
+}
+
+/* ─── About ─── */
+.rga-about-inner {
+  max-width: 1200px; margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 80px; align-items: start;
+}
+.rga-about-heading {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(28px, 3.5vw, 40px);
+  color: var(--text-dark); line-height: 1.2; margin-bottom: 20px;
+}
+.rga-about-heading span { color: var(--accent); }
+.rga-about-body {
+  font-size: 15px; color: var(--text); line-height: 1.8; margin-bottom: 32px;
+}
+.rga-pillars { display: flex; flex-direction: column; gap: 16px; }
 .rga-pillar {
-  display:flex; gap:18px; align-items:flex-start;
-  padding:18px; border:1px solid var(--bn);
-  background:rgba(37, 99, 235, 0.02);
-  clip-path:polygon(8px 0,100% 0,calc(100% - 8px) 100%,0 100%);
-  transition:all 0.3s;
+  display: flex; gap: 16px; align-items: flex-start;
+  padding: 20px; border-radius: var(--radius-sm);
+  border: 1px solid var(--border); background: #fff;
+  transition: var(--transition);
 }
-.rga-pillar:hover { border-color:rgba(37, 99, 235, 0.3); background:rgba(37, 99, 235, 0.04); }
+.rga-pillar:hover {
+  border-color: rgba(255,107,53,0.2);
+  box-shadow: 0 4px 16px rgba(255,107,53,0.06);
+  transform: translateX(4px);
+}
 .rga-pillar-icon {
-  width:42px; height:42px; min-width:42px;
-  border:1px solid var(--accent); display:flex; align-items:center; justify-content:center;
-  font-family:'Orbitron',sans-serif; font-size:10px; color:var(--accent);
-  clip-path:polygon(6px 0,100% 0,calc(100% - 6px) 100%,0 100%);
+  width: 44px; height: 44px; min-width: 44px;
+  border-radius: 10px;
+  background: var(--accent-glow);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 800; color: var(--accent);
 }
-.rga-pillar-title { font-family:'Orbitron',sans-serif; font-size:13px; font-weight:700; color:var(--tp); margin-bottom:5px; }
-.rga-pillar-desc { font-size:13px; color:var(--tm); line-height:1.6; }
+.rga-pillar-title {
+  font-weight: 700; font-size: 15px;
+  color: var(--text-dark); margin-bottom: 4px;
+}
+.rga-pillar-desc { font-size: 13px; color: var(--text-light); line-height: 1.6; }
 
-.rga-vmg-stack { display:flex; flex-direction:column; gap:18px; }
+.rga-vmg-stack { display: flex; flex-direction: column; gap: 16px; }
 .rga-vmg-card {
-  padding:26px 30px; border:1px solid var(--bn);
-  background:var(--bc); display:flex; gap:18px; align-items:flex-start;
-  position:relative; overflow:hidden; transition:all 0.3s;
+  padding: 24px; border-radius: var(--radius);
+  border: 1px solid var(--border); background: #fff;
+  display: flex; gap: 16px; align-items: flex-start;
+  transition: var(--transition); position: relative; overflow: hidden;
 }
 .rga-vmg-card::after {
-  content:''; position:absolute; bottom:0; left:0; width:100%; height:2px;
-  background:linear-gradient(90deg,var(--accent),var(--dark));
-  transform:scaleX(0); transform-origin:left; transition:transform 0.4s;
+  content: ''; position: absolute; bottom: 0; left: 0;
+  width: 100%; height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--primary));
+  transform: scaleX(0); transform-origin: left; transition: transform 0.4s;
 }
-.rga-vmg-card:hover::after { transform:scaleX(1); }
-.rga-vmg-card:hover { transform:translateX(8px); }
+.rga-vmg-card:hover::after { transform: scaleX(1); }
+.rga-vmg-card:hover { transform: translateX(6px); }
 .rga-vmg-icon {
-  width:48px; height:48px; min-width:48px; border-radius:50%;
-  background:linear-gradient(135deg,rgba(37,99,235,0.1),rgba(79,70,229,0.1));
-  border:1px solid rgba(37,99,235,0.3);
-  display:flex; align-items:center; justify-content:center; font-size:20px;
+  width: 48px; height: 48px; min-width: 48px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent-glow), rgba(30,58,95,0.05));
+  border: 1px solid rgba(255,107,53,0.15);
+  display: flex; align-items: center; justify-content: center; font-size: 22px;
 }
-.rga-vmg-title { font-family:'Orbitron',sans-serif; font-size:13px; font-weight:700; color:var(--accent); margin-bottom:8px; letter-spacing:2px; }
-.rga-vmg-desc { font-size:14px; color:var(--tm); line-height:1.6; }
+.rga-vmg-title {
+  font-weight: 700; font-size: 14px;
+  color: var(--accent); margin-bottom: 6px;
+  letter-spacing: 1px;
+}
+.rga-vmg-desc { font-size: 14px; color: var(--text); line-height: 1.6; }
 
-/* ── Brands ── */
-.rga-brands-grid { display:flex; flex-wrap:wrap; justify-content:center; gap:18px; align-items:center; }
+/* ─── Brands ─── */
+.rga-brands-grid {
+  max-width: 1200px; margin: 0 auto;
+  display: flex; flex-wrap: wrap; justify-content: center;
+  gap: 16px; align-items: center;
+}
 .rga-brand-badge {
-  padding:14px 28px; border:1px solid var(--bn);
-  background:rgba(37, 99, 235, 0.02);
-  font-family:'Orbitron',sans-serif; font-size:12px; font-weight:600;
-  letter-spacing:2px; color:var(--tm); transition:all 0.3s;
-  clip-path:polygon(8px 0,100% 0,calc(100% - 8px) 100%,0 100%);
+  padding: 14px 28px; border-radius: var(--radius-sm);
+  border: 1px solid var(--border); background: #fff;
+  display: flex; align-items: center; gap: 10px;
+  font-size: 13px; font-weight: 700; color: var(--text);
+  letter-spacing: 1px; transition: var(--transition);
 }
-.rga-brand-badge:hover { color:var(--accent); border-color:rgba(37, 99, 235, 0.3); box-shadow:0 10px 20px rgba(37, 99, 235, 0.05); }
+.rga-brand-badge:hover {
+  border-color: rgba(255,107,53,0.3);
+  box-shadow: 0 4px 16px rgba(255,107,53,0.06);
+  color: var(--accent); transform: translateY(-3px);
+}
+.rga-brand-badge svg { color: var(--accent); }
 
-/* ── Testimonials ── */
-.rga-testi-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:22px; }
+/* ─── Testimonials ─── */
+.rga-testi-grid {
+  max-width: 1200px; margin: 0 auto;
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+}
 .rga-testi-card {
-  padding:34px 28px; border:1px solid var(--bn);
-  background:#ffffff; position:relative; overflow:hidden; transition:all 0.3s;
+  padding: 32px 28px; border-radius: var(--radius);
+  border: 1px solid var(--border); background: #fff;
+  position: relative; overflow: hidden; transition: var(--transition);
 }
 .rga-testi-card::before {
-  content:'"'; position:absolute; top:16px; right:22px;
-  font-size:76px; font-family:'Orbitron',sans-serif;
-  color:rgba(37,99,235,0.05); line-height:1;
+  content: '"'; position: absolute; top: 12px; right: 20px;
+  font-family: 'DM Serif Display', serif;
+  font-size: 72px; color: rgba(255,107,53,0.07); line-height: 1;
 }
-.rga-testi-card:hover { border-color:rgba(37, 99, 235, 0.3); box-shadow: 0 15px 30px -10px rgba(15, 23, 42, 0.08); transform:translateY(-4px); }
-.rga-testi-text { font-size:14px; line-height:1.8; color:var(--tm); margin-bottom:26px; font-style:italic; }
-.rga-testi-brand { display:flex; align-items:center; gap:12px; }
-.rga-testi-logo {
-  width:42px; height:42px; border-radius:8px;
-  background:rgba(37,99,235,0.05); border:1px solid var(--bn);
-  display:flex; align-items:center; justify-content:center;
-  font-family:'Orbitron',sans-serif; font-size:10px; color:var(--accent);
+.rga-testi-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--card-shadow-hover);
+  border-color: transparent;
 }
-.rga-testi-name { font-family:'Orbitron',sans-serif; font-size:11px; font-weight:700; color:var(--tp); }
-.rga-testi-company { font-size:10px; color:var(--accent); letter-spacing:2px; margin-top:2px; }
+.rga-testi-stars { margin-bottom: 16px; color: #f59e0b; font-size: 16px; letter-spacing: 2px; }
+.rga-testi-text {
+  font-size: 15px; line-height: 1.8; color: var(--text);
+  margin-bottom: 24px; font-style: italic;
+}
+.rga-testi-author { display: flex; align-items: center; gap: 12px; }
+.rga-testi-avatar {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent-glow), rgba(30,58,95,0.08));
+  border: 2px solid rgba(255,107,53,0.15);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'DM Serif Display', serif;
+  font-size: 16px; color: var(--accent);
+}
+.rga-testi-name { font-weight: 700; font-size: 14px; color: var(--text-dark); }
+.rga-testi-company { font-size: 12px; color: var(--accent); font-weight: 500; margin-top: 2px; }
 
-/* ── Contact ── */
-.rga-contact-wrap { display:grid; grid-template-columns:1fr 1.4fr; gap:80px; align-items:start; }
-.rga-contact-heading { font-family:'Orbitron',sans-serif; font-size:clamp(20px,2.5vw,34px); font-weight:700; color:var(--tp); margin-bottom:18px; }
-.rga-contact-desc { font-size:15px; color:var(--tm); line-height:1.8; margin-bottom:36px; }
-.rga-contact-details { display:flex; flex-direction:column; gap:16px; }
+/* ─── Contact ─── */
+.rga-contact-inner {
+  max-width: 1200px; margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 1.4fr;
+  gap: 64px; align-items: start;
+}
+.rga-contact-heading {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(24px, 3vw, 36px);
+  color: var(--text-dark); margin-bottom: 16px; line-height: 1.2;
+}
+.rga-contact-heading span { color: var(--accent); }
+.rga-contact-desc {
+  font-size: 15px; color: var(--text-light); line-height: 1.8; margin-bottom: 32px;
+}
+.rga-contact-details { display: flex; flex-direction: column; gap: 14px; }
 .rga-contact-detail {
-  padding:22px; border:1px solid var(--bn);
-  background:rgba(37, 99, 235, 0.02);
-  clip-path:polygon(8px 0,100% 0,calc(100% - 8px) 100%,0 100%);
+  padding: 18px 20px; border-radius: var(--radius-sm);
+  border: 1px solid var(--border); background: #fff;
+  transition: var(--transition);
 }
-.rga-detail-label { font-family:'Share Tech Mono',monospace; font-size:10px; color:var(--accent); letter-spacing:3px; margin-bottom:7px; }
-.rga-detail-value { font-size:15px; color:var(--tp); font-weight:500; }
+.rga-contact-detail:hover { border-color: rgba(255,107,53,0.2); }
+.rga-detail-label {
+  font-size: 11px; font-weight: 700; color: var(--accent);
+  letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px;
+}
+.rga-detail-value { font-size: 15px; color: var(--text-dark); font-weight: 500; }
 
-.rga-contact-form { display:flex; flex-direction:column; gap:14px; }
-.rga-form-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
-.rga-form-group { display:flex; flex-direction:column; gap:7px; }
-.rga-form-label { font-family:'Share Tech Mono',monospace; font-size:10px; color:var(--accent); letter-spacing:2px; }
+.rga-form { display: flex; flex-direction: column; gap: 16px; }
+.rga-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.rga-form-group { display: flex; flex-direction: column; gap: 6px; }
+.rga-form-label {
+  font-size: 13px; font-weight: 600; color: var(--text-dark);
+}
 .rga-form-input, .rga-form-textarea {
-  background:#ffffff; border:1px solid var(--bn);
-  padding:13px 16px; color:var(--tp);
-  font-family:'Rajdhani',sans-serif; font-size:15px;
-  outline:none; transition:all 0.3s; resize:none;
-  clip-path:polygon(6px 0,100% 0,calc(100% - 6px) 100%,0 100%);
+  background: #fff; border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm); padding: 14px 18px;
+  color: var(--text-dark); font-family: 'Inter', sans-serif;
+  font-size: 15px; outline: none; transition: var(--transition);
+  resize: none;
 }
 .rga-form-input:focus, .rga-form-textarea:focus {
-  border-color:var(--accent); box-shadow:0 0 15px rgba(37,99,235,0.08);
-  background:#ffffff;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
 }
-.rga-form-input::placeholder, .rga-form-textarea::placeholder { color:var(--tm); }
-.rga-form-textarea { height:120px; }
+.rga-form-input::placeholder, .rga-form-textarea::placeholder {
+  color: var(--text-light);
+}
+.rga-form-textarea { height: 130px; }
 .rga-btn-submit {
-  padding:16px;
-  background:linear-gradient(135deg,var(--accent),var(--dark));
-  color:var(--bd); font-family:'Orbitron',sans-serif;
-  font-size:12px; font-weight:700; letter-spacing:3px;
-  text-transform:uppercase; border:none; cursor:pointer;
-  clip-path:polygon(10px 0,100% 0,calc(100% - 10px) 100%,0 100%);
-  transition:all 0.3s;
+  padding: 16px; border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, var(--accent), #e85d2c);
+  color: #fff; font-size: 15px; font-weight: 700;
+  letter-spacing: 0.5px; border: none; cursor: pointer;
+  transition: var(--transition);
+  box-shadow: 0 4px 16px rgba(255,107,53,0.25);
 }
-.rga-btn-submit:hover { box-shadow:0 10px 25px rgba(37,99,235,0.3); transform:scale(1.02); }
+.rga-btn-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(255,107,53,0.35);
+}
+.rga-form-msg {
+  padding: 14px 18px; border-radius: var(--radius-sm);
+  font-size: 14px; font-weight: 500;
+}
+.rga-form-msg.success {
+  background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.3);
+  color: var(--green);
+}
+.rga-form-msg.error {
+  background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.3);
+  color: #ef4444;
+}
 
-/* ── Follow ── */
-.rga-follow-section {
-  text-align:center; padding:80px 4rem;
-  background:var(--bk); border-top:1px solid var(--bn);
-  position:relative; z-index:10;
+/* ─── Social / Follow ─── */
+.rga-follow {
+  text-align: center; padding: 80px 40px;
+  background: var(--bg-warm); border-top: 1px solid var(--border);
+  position: relative; z-index: 10;
 }
-.rga-social-btns { display:flex; justify-content:center; gap:24px; margin-top:40px; }
+.rga-social-btns {
+  display: flex; justify-content: center; gap: 16px;
+  margin-top: 36px; flex-wrap: wrap;
+}
 .rga-social-btn {
-  display:flex; align-items:center; gap:12px;
-  padding:15px 34px; border:1px solid var(--bn);
-  background:#ffffff; color:var(--tp);
-  font-family:'Orbitron',sans-serif; font-size:11px; letter-spacing:2px;
-  cursor:pointer; text-decoration:none;
-  clip-path:polygon(8px 0,100% 0,calc(100% - 8px) 100%,0 100%);
-  transition:all 0.3s; animation:floatBtn 3s ease-in-out infinite;
+  display: flex; align-items: center; gap: 10px;
+  padding: 14px 28px; border-radius: 50px;
+  border: 1.5px solid var(--border); background: #fff;
+  color: var(--text-dark); font-size: 14px; font-weight: 600;
+  cursor: pointer; text-decoration: none; transition: var(--transition);
 }
-.rga-social-btn:nth-child(2) { animation-delay:0.5s; }
-.rga-social-btn:hover { border-color:var(--accent); color:var(--accent); box-shadow:0 10px 20px rgba(37, 99, 235, 0.08); }
+.rga-social-btn:hover {
+  border-color: var(--accent); color: var(--accent);
+  box-shadow: 0 4px 16px rgba(255,107,53,0.08);
+  transform: translateY(-2px);
+}
+.rga-social-btn svg { width: 20px; height: 20px; }
 
-/* ── Footer ── */
+/* ─── Footer ─── */
 .rga-footer {
-  position:relative; z-index:10; background:var(--bk);
-  border-top:1px solid var(--bn); padding:28px 4rem;
-  display:flex; justify-content:space-between; align-items:center;
+  position: relative; z-index: 10;
+  background: var(--dark); padding: 36px 40px;
+  display: flex; justify-content: space-between; align-items: center;
 }
-.rga-footer-left { font-family:'Share Tech Mono',monospace; font-size:11px; color:var(--tm); letter-spacing:2px; }
-.rga-footer-right { font-family:'Share Tech Mono',monospace; font-size:10px; color:rgba(37,99,235,0.5); }
+.rga-footer-left {
+  font-size: 13px; color: rgba(255,255,255,0.5); font-weight: 400;
+}
+.rga-footer-right {
+  font-size: 12px; color: rgba(255,255,255,0.3);
+}
 
-/* ── Reveal animation ── */
-.rga-reveal { opacity:0; transform:translateY(30px); transition:all 0.7s ease; }
-.rga-reveal.visible { opacity:1; transform:translateY(0); }
-.rga-reveal-d1 { transition-delay:0.1s; }
-.rga-reveal-d2 { transition-delay:0.2s; }
-.rga-reveal-d3 { transition-delay:0.3s; }
+/* ─── Reveal animation ─── */
+.rga-reveal {
+  opacity: 0; transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.rga-reveal.visible { opacity: 1; transform: translateY(0); }
+.rga-reveal-d1 { transition-delay: 0.1s; }
+.rga-reveal-d2 { transition-delay: 0.2s; }
+.rga-reveal-d3 { transition-delay: 0.3s; }
 
-/* ── Form success/error ── */
-.rga-form-msg { padding:12px 16px; font-family:'Share Tech Mono',monospace; font-size:11px; letter-spacing:2px; }
-.rga-form-msg.success { background:rgba(21,128,61,0.1); border:1px solid rgba(21,128,61,0.4); color:var(--green); }
-.rga-form-msg.error   { background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.4); color:var(--gold); }
-`;;
+/* ─── RESPONSIVE: Tablet ─── */
+@media (max-width: 1024px) {
+  .rga-nav { padding: 0 24px; }
+  .rga-nav-links { display: none; }
+  .rga-nav-cta { display: none; }
+  .rga-hamburger { display: flex; }
+  .rga-mobile-overlay { display: flex; }
+
+  .rga-hero { padding: 100px 24px 60px; }
+  .rga-hero-inner { grid-template-columns: 1fr; gap: 40px; text-align: center; }
+  .rga-hero-sub { margin-left: auto; margin-right: auto; }
+  .rga-hero-btns { justify-content: center; }
+  .rga-hero-graphic { max-width: 360px; margin: 0 auto; }
+
+  .rga-stats-inner { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .rga-stat:nth-child(2)::after { display: none; }
+
+  .rga-section { padding: 80px 24px; }
+  .rga-about-inner { grid-template-columns: 1fr; gap: 48px; }
+  .rga-contact-inner { grid-template-columns: 1fr; gap: 40px; }
+
+  .rga-float-badge { display: none; }
+}
+
+/* ─── RESPONSIVE: Mobile ─── */
+@media (max-width: 640px) {
+  .rga-nav { padding: 0 16px; height: 64px; }
+  .rga-hero { padding: 90px 16px 48px; min-height: auto; }
+  .rga-hero-title { font-size: clamp(30px, 8vw, 42px); }
+  .rga-hero-sub { font-size: 15px; }
+  .rga-hero-btns { flex-direction: column; align-items: stretch; }
+  .rga-hero-btns button { width: 100%; text-align: center; }
+  .rga-hero-graphic { max-width: 260px; }
+
+  .rga-stats { padding: 32px 16px; }
+  .rga-stats-inner { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .rga-stat { padding: 14px 8px; }
+  .rga-stat-number { font-size: 30px; }
+  .rga-stat-label { font-size: 11px; }
+  .rga-stat:not(:last-child)::after { display: none; }
+
+  .rga-section { padding: 60px 16px; }
+  .rga-section-header { margin-bottom: 40px; }
+  .rga-section-title { font-size: clamp(26px, 6vw, 36px); }
+
+  .rga-services-grid { grid-template-columns: 1fr; gap: 16px; }
+  .rga-testi-grid { grid-template-columns: 1fr; gap: 16px; }
+
+  .rga-form-row { grid-template-columns: 1fr; }
+
+  .rga-brands-grid { gap: 10px; }
+  .rga-brand-badge { padding: 10px 18px; font-size: 11px; }
+
+  .rga-follow { padding: 60px 16px; }
+  .rga-social-btns { flex-direction: column; align-items: stretch; }
+  .rga-social-btn { justify-content: center; }
+
+  .rga-footer { padding: 24px 16px; flex-direction: column; gap: 8px; text-align: center; }
+}
+
+/* ─── RESPONSIVE: Small phones ─── */
+@media (max-width: 380px) {
+  .rga-hero-title { font-size: 28px; }
+  .rga-section-title { font-size: 24px; }
+  .rga-stat-number { font-size: 26px; }
+  .rga-about-heading { font-size: 24px; }
+  .rga-contact-heading { font-size: 22px; }
+}
+`;
 
 // ─── SVG Icons ──────────────────────────────────────────────────────────────
 const InstagramIcon = () => (
@@ -536,15 +745,11 @@ const ConsultIcon = () => (
 const DMIcon = () => (
   <svg viewBox="0 0 24 24" style={{ width: 24, height: 24, stroke: 'currentColor', fill: 'none', strokeWidth: 1.5 }}>
     <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
-    <circle cx="9" cy="10" r="1" fill="currentColor" stroke="none" />
-    <circle cx="12" cy="10" r="1" fill="currentColor" stroke="none" />
-    <circle cx="15" cy="10" r="1" fill="currentColor" stroke="none" />
   </svg>
 );
-const PhoneIcon = () => (
+const WhatsAppIcon = () => (
   <svg viewBox="0 0 24 24" style={{ width: 24, height: 24, stroke: 'currentColor', fill: 'none', strokeWidth: 1.5 }}>
-    <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.18 2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z" />
-    <path d="M14.5 2A6.5 6.5 0 0121 8.5M14.5 6A2.5 2.5 0 0117 8.5" />
+    <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z" />
   </svg>
 );
 const LeadIcon = () => (
@@ -554,169 +759,62 @@ const LeadIcon = () => (
     <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" />
   </svg>
 );
-const RiselLogo = ({ size = 46, style = {} }) => (
-  <svg viewBox="0 0 200 200" width={size} height={size} style={{ display: 'inline-block', ...style }}>
-    <defs>
-      {/* Glow filters for neon effects */}
-      <filter id="neonGlowBlue" x="-20%" y="-20%" width="140%" height="140%">
-        <feGaussianBlur stdDeviation="3" result="blur" />
-        <feMerge>
-          <feMergeNode in="blur" />
-          <feMergeNode in="SourceGraphic" />
-        </feMerge>
-      </filter>
-      <filter id="neonGlowGreen" x="-20%" y="-20%" width="140%" height="140%">
-        <feGaussianBlur stdDeviation="2" result="blur" />
-        <feMerge>
-          <feMergeNode in="blur" />
-          <feMergeNode in="SourceGraphic" />
-        </feMerge>
-      </filter>
-      <filter id="neonGlowPurple" x="-20%" y="-20%" width="140%" height="140%">
-        <feGaussianBlur stdDeviation="3" result="blur" />
-        <feMerge>
-          <feMergeNode in="blur" />
-          <feMergeNode in="SourceGraphic" />
-        </feMerge>
-      </filter>
-
-      {/* Gradients */}
-      <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="#00f2fe" /> {/* Neon Cyan */}
-        <stop offset="100%" stopColor="#4facfe" /> {/* Neon Blue */}
-      </linearGradient>
-      <linearGradient id="rGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-        <stop offset="0%" stopColor="#ec4899" /> {/* Pink */}
-        <stop offset="50%" stopColor="#8b5cf6" /> {/* Violet */}
-        <stop offset="100%" stopColor="#3b82f6" /> {/* Blue */}
-      </linearGradient>
-      <linearGradient id="arrowGrad" x1="0%" y1="100%" x2="100%" y2="0%">
-        <stop offset="0%" stopColor="#22c55e" /> {/* Emerald Green */}
-        <stop offset="100%" stopColor="#4ade80" /> {/* Light Green */}
-      </linearGradient>
-      <linearGradient id="globeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="#ff7b00" />
-        <stop offset="50%" stopColor="#ff007b" />
-        <stop offset="100%" stopColor="#00f2fe" />
-      </linearGradient>
-    </defs>
-
-    {/* 1. Globe wireframe background circles (neon globe lines) */}
-    <g stroke="url(#globeGrad)" strokeWidth="0.7" opacity="0.45" fill="none">
-      <circle cx="100" cy="100" r="92" />
-      <circle cx="100" cy="100" r="88" strokeWidth="0.4" />
-      {/* Ellipses representing lat/long wireframe lines */}
-      <ellipse cx="100" cy="100" rx="92" ry="35" transform="rotate(30 100 100)" />
-      <ellipse cx="100" cy="100" rx="92" ry="35" transform="rotate(60 100 100)" />
-      <ellipse cx="100" cy="100" rx="92" ry="35" transform="rotate(90 100 100)" />
-      <ellipse cx="100" cy="100" rx="92" ry="35" transform="rotate(120 100 100)" />
-      <ellipse cx="100" cy="100" rx="92" ry="35" transform="rotate(150 100 100)" />
-
-      {/* Interlacing diagonal lines forming the beautiful outer grid sphere */}
-      <path d="M 8 100 Q 100 8 192 100 M 8 100 Q 100 192 192 100" strokeWidth="0.5" />
-      <path d="M 100 8 Q 8 100 100 192 M 100 8 Q 192 100 100 192" strokeWidth="0.5" />
-    </g>
-
-    {/* 2. Shield in the center */}
-    {/* Outer glowing shield stroke */}
-    <path d="M 100 45 Q 68 49 62 58 L 62 95 Q 62 128 100 140 Q 138 128 138 95 L 138 58 Q 132 49 100 45 Z"
-      stroke="url(#shieldGrad)" strokeWidth="2.5" fill="rgba(15,23,42,0.6)" filter="url(#neonGlowBlue)" />
-
-    {/* Inner decorative grid and shield borders */}
-    <path d="M 100 50 Q 72 54 67 62 L 67 92 Q 67 122 100 133 Q 133 122 133 92 L 133 62 Q 128 54 100 50 Z"
-      stroke="#00f2fe" strokeWidth="0.7" fill="none" opacity="0.7" />
-
-    {/* Shield vertical/horizontal grid lines */}
-    <path d="M 70 85 L 130 85 M 72 100 L 128 100 M 100 50 L 100 133" stroke="url(#shieldGrad)" strokeWidth="0.4" fill="none" opacity="0.3" />
-
-    {/* 3. Star at the top of shield */}
-    <polygon points="100,56 102.5,62 109,62.5 104,67 105.5,73 100,70 94.5,73 96,67 91,62.5 97.5,62"
-      fill="#ffffff" stroke="#ffffff" strokeWidth="0.5" filter="url(#neonGlowBlue)" />
-
-    {/* 4. Elegant Capital 'R' in the center */}
-    {/* Vertical left leg of the R */}
-    <path d="M 86 115 L 86 75 C 86 75 92 72 98 72 C 108 72 118 78 118 88 C 118 97 108 102 98 102 L 86 102"
-      stroke="url(#rGrad)" strokeWidth="4.5" strokeLinecap="round" strokeLinejoin="round" fill="none" filter="url(#neonGlowPurple)" />
-    <path d="M 98 102 L 118 115"
-      stroke="url(#rGrad)" strokeWidth="4.5" strokeLinecap="round" fill="none" filter="url(#neonGlowPurple)" />
-
-    {/* 5. Glowing Green Upward Growth Arrow crossing through R */}
-    <path d="M 87 113 Q 95 90 106 82"
-      stroke="url(#arrowGrad)" strokeWidth="4.5" strokeLinecap="round" fill="none" filter="url(#neonGlowGreen)" />
-    <path d="M 100 81 L 108 81 L 108 89"
-      stroke="url(#arrowGrad)" strokeWidth="4.5" strokeLinecap="round" strokeLinejoin="round" fill="none" filter="url(#neonGlowGreen)" />
-  </svg>
-);
-const WhatsAppIcon = () => (
-  <svg viewBox="0 0 24 24" style={{ width: 24, height: 24, stroke: 'currentColor', fill: 'none', strokeWidth: 1.5 }}>
-    <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z" />
-    <path d="M9.4 8.5c-.3 0-.6.1-.9.4-.3.3-.8.8-.8 1.9s.8 2.2 1 2.4c.2.2 1.6 2.4 3.9 3.4.5.2 1 .4 1.4.5.6.2 1.1.2 1.5.1.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2l-1-1c-.2-.2-.5-.3-.8-.1l-.4.5c-.2.2-.4.2-.7 0-.3-.1-1.2-.4-2.2-1.3-.8-.7-1.3-1.6-1.5-1.9-.2-.3 0-.5.1-.7l.4-.4c.1-.1.2-.3.2-.4v-.4l-.5-1.2c-.2-.3-.5-.4-.7-.4z" fill="currentColor" stroke="none" />
+const RocketIcon = () => (
+  <svg viewBox="0 0 24 24" style={{ width: '100%', height: '100%', stroke: '#fff', fill: 'none', strokeWidth: 1.5 }}>
+    <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 00-2.91-.09z" />
+    <path d="M12 15l-3-3a22 22 0 012-3.95A12.88 12.88 0 0122 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 01-4 2z" />
+    <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" />
   </svg>
 );
 const FleurIcon = () => (
-  <svg viewBox="0 0 24 24" style={{ width: 24, height: 24, stroke: 'currentColor', fill: 'none', strokeWidth: 1.5 }}>
+  <svg viewBox="0 0 24 24" style={{ width: 20, height: 20, stroke: 'currentColor', fill: 'none', strokeWidth: 1.5 }}>
     <path d="M12 2C12 2 8 6 8 10C8 14.5 12 18 12 22C12 22 16 14.5 16 10C16 6 12 2 12 2Z" />
     <path d="M12 10C10.5 7.5 7 7 7 7C7 7 8 10.5 10 12" />
     <path d="M12 10C13.5 7.5 17 7 17 7C17 7 16 10.5 14 12" />
   </svg>
 );
-const AdopterzIcon = ({ size = 24, style = {} }) => (
-  <svg viewBox="0 0 100 100" width={size} height={size} style={{ fill: 'none', strokeWidth: 9, display: 'inline-block', ...style }}>
+const AdopterzIcon = ({ size = 20 }) => (
+  <svg viewBox="0 0 100 100" width={size} height={size} style={{ fill: 'none', strokeWidth: 9 }}>
     <defs>
-      <linearGradient id="adopGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="#a855f7" /> {/* Purple */}
-        <stop offset="100%" stopColor="#ec4899" /> {/* Pink */}
+      <linearGradient id="ag1" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="#a855f7" /><stop offset="100%" stopColor="#ec4899" />
       </linearGradient>
-      <linearGradient id="adopGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="#f97316" /> {/* Orange */}
-        <stop offset="100%" stopColor="#ec4899" /> {/* Pink */}
+      <linearGradient id="ag2" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="#f97316" /><stop offset="100%" stopColor="#ec4899" />
       </linearGradient>
     </defs>
-    {/* Right large chevron (purple-pink) */}
-    <path d="M35 55 L55 25 L80 75" stroke="url(#adopGrad1)" strokeLinecap="round" strokeLinejoin="round" />
-    {/* Left small chevron (orange-pink) */}
-    <path d="M20 75 L35 55 L48 72" stroke="url(#adopGrad2)" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M35 55 L55 25 L80 75" stroke="url(#ag1)" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M20 75 L35 55 L48 72" stroke="url(#ag2)" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 );
-const MagnifiscienceIcon = ({ size = 44, style = {} }) => (
-  <svg viewBox="0 0 100 40" width={size} height={size * 0.4} style={{ fill: 'currentColor', stroke: 'none', display: 'inline-block', ...style }}>
-    {/* Wave 1: left to right, high to low to high */}
-    <circle cx="10" cy="10" r="2.2" />
-    <circle cx="20" cy="13" r="2.2" />
-    <circle cx="30" cy="20" r="2.2" />
-    <circle cx="40" cy="27" r="2.2" />
-    <circle cx="50" cy="30" r="2.2" />
-    <circle cx="60" cy="27" r="2.2" />
-    <circle cx="70" cy="20" r="2.2" />
-    <circle cx="80" cy="13" r="2.2" />
+const MagnifiscienceIcon = ({ size = 36 }) => (
+  <svg viewBox="0 0 100 40" width={size} height={size * 0.4} style={{ fill: 'currentColor', stroke: 'none' }}>
+    <circle cx="10" cy="10" r="2.2" /><circle cx="20" cy="13" r="2.2" />
+    <circle cx="30" cy="20" r="2.2" /><circle cx="40" cy="27" r="2.2" />
+    <circle cx="50" cy="30" r="2.2" /><circle cx="60" cy="27" r="2.2" />
+    <circle cx="70" cy="20" r="2.2" /><circle cx="80" cy="13" r="2.2" />
     <circle cx="90" cy="10" r="2.2" />
-
-    {/* Wave 2: left to right, low to high to low */}
-    <circle cx="10" cy="30" r="2.2" />
-    <circle cx="20" cy="27" r="2.2" />
-    <circle cx="30" cy="20" r="2.2" />
-    <circle cx="40" cy="13" r="2.2" />
-    <circle cx="50" cy="10" r="2.2" />
-    <circle cx="60" cy="13" r="2.2" />
-    <circle cx="70" cy="20" r="2.2" />
-    <circle cx="80" cy="27" r="2.2" />
+    <circle cx="10" cy="30" r="2.2" /><circle cx="20" cy="27" r="2.2" />
+    <circle cx="30" cy="20" r="2.2" /><circle cx="40" cy="13" r="2.2" />
+    <circle cx="50" cy="10" r="2.2" /><circle cx="60" cy="13" r="2.2" />
+    <circle cx="70" cy="20" r="2.2" /><circle cx="80" cy="27" r="2.2" />
     <circle cx="90" cy="30" r="2.2" />
   </svg>
 );
 const EanElliotIcon = () => (
-  <svg viewBox="0 0 24 24" style={{ width: 24, height: 24, stroke: 'currentColor', fill: 'none', strokeWidth: 1.5 }}>
+  <svg viewBox="0 0 24 24" style={{ width: 20, height: 20, stroke: 'currentColor', fill: 'none', strokeWidth: 1.5 }}>
     <path d="M12 3L4 6v6c0 5.25 3.42 10.16 8 11 4.58-.84 8-5.75 8-11V6l-8-3z" />
     <path d="M9 8h6v3H9v3h6" />
   </svg>
 );
 const Digital365Icon = () => (
-  <svg viewBox="0 0 24 24" style={{ width: 24, height: 24, stroke: 'currentColor', fill: 'none', strokeWidth: 1.5 }}>
+  <svg viewBox="0 0 24 24" style={{ width: 20, height: 20, stroke: 'currentColor', fill: 'none', strokeWidth: 1.5 }}>
     <path d="M7 12a5 5 0 1110 0 5 5 0 01-10 0z" />
     <path d="M12 2v6M12 16v6M2 12h6M16 12h6" />
   </svg>
 );
 const KFCIcon = () => (
-  <svg viewBox="0 0 24 24" style={{ width: 24, height: 24, stroke: 'currentColor', fill: 'none', strokeWidth: 1.5 }}>
+  <svg viewBox="0 0 24 24" style={{ width: 20, height: 20, stroke: 'currentColor', fill: 'none', strokeWidth: 1.5 }}>
     <path d="M6 3h12l-2 15H8L6 3z" />
     <path d="M10 3v15M14 3v15" />
   </svg>
@@ -724,24 +822,14 @@ const KFCIcon = () => (
 
 // ─── Main Component ──────────────────────────────────────────────────────────
 export default function RiselGrowthAgency() {
-  // Cursor
-  const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
-  const [ringPos, setRingPos] = useState({ x: 0, y: 0 });
-  const [ringExpanded, setRingExpanded] = useState(false);
-  const ringRef = useRef({ x: 0, y: 0 });
-  const mouseRef = useRef({ x: 0, y: 0 });
-  const animFrameRef = useRef(null);
-
-  // Stats counters
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [navScrolled, setNavScrolled] = useState(false);
   const [stats, setStats] = useState({ years: 0, brands: 0, retention: 0, reach: 0 });
-  const statsObsRef = useRef(null);
   const statsRef = useRef(null);
-
-  // Form
   const [form, setForm] = useState({ name: '', email: '', phone: '', message: '' });
   const [formMsg, setFormMsg] = useState(null);
 
-  // Inject styles once
+  // Inject styles
   useEffect(() => {
     const el = document.createElement('style');
     el.id = 'rga-styles';
@@ -750,24 +838,11 @@ export default function RiselGrowthAgency() {
     return () => { const s = document.getElementById('rga-styles'); if (s) s.remove(); };
   }, []);
 
-  // Cursor smooth ring
+  // Scroll nav shadow
   useEffect(() => {
-    const onMove = (e) => {
-      mouseRef.current = { x: e.clientX, y: e.clientY };
-      setCursorPos({ x: e.clientX, y: e.clientY });
-    };
-    document.addEventListener('mousemove', onMove);
-    const animate = () => {
-      ringRef.current.x += (mouseRef.current.x - ringRef.current.x) * 0.12;
-      ringRef.current.y += (mouseRef.current.y - ringRef.current.y) * 0.12;
-      setRingPos({ x: ringRef.current.x, y: ringRef.current.y });
-      animFrameRef.current = requestAnimationFrame(animate);
-    };
-    animFrameRef.current = requestAnimationFrame(animate);
-    return () => {
-      document.removeEventListener('mousemove', onMove);
-      if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
-    };
+    const onScroll = () => setNavScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
   // Reveal on scroll
@@ -780,7 +855,7 @@ export default function RiselGrowthAgency() {
     return () => obs.disconnect();
   }, []);
 
-  // Stats counter animation
+  // Stats counter
   useEffect(() => {
     const targets = { years: 4, brands: 200, retention: 98, reach: 50 };
     const obs = new IntersectionObserver(
@@ -803,274 +878,228 @@ export default function RiselGrowthAgency() {
           obs.disconnect();
         }
       },
-      { threshold: 0.5 }
+      { threshold: 0.3 }
     );
     if (statsRef.current) obs.observe(statsRef.current);
     return () => obs.disconnect();
   }, []);
 
-  const scrollTo = (id) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+  const scrollTo = (id) => {
+    setMenuOpen(false);
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+  };
 
-  // Form submit
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!form.name || !form.email || !form.message) {
-      setFormMsg({ type: 'error', text: 'PLEASE FILL ALL REQUIRED FIELDS' });
+      setFormMsg({ type: 'error', text: 'Please fill in all required fields.' });
       return;
     }
-    setFormMsg({ type: 'success', text: 'MESSAGE SENT — WE\'LL RESPOND WITHIN 24H' });
+    setFormMsg({ type: 'success', text: 'Message sent successfully! We\'ll respond within 24 hours.' });
     setForm({ name: '', email: '', phone: '', message: '' });
     setTimeout(() => setFormMsg(null), 5000);
   };
 
-  // Orb orbit dots animation
-  const orbRefs = useRef([]);
+  // Lock body scroll when mobile menu is open
   useEffect(() => {
-    const colors = ['#2563eb', '#1a1a1a', '#c8a96e'];
-    const radii = [120, 165, 215];
-    const speeds = [8000, 12000, 18000];
-    let running = true;
-    const animate = () => {
-      if (!running) return;
-      const now = Date.now();
-      orbRefs.current.forEach((dot, i) => {
-        if (!dot) return;
-        const angle = ((now / speeds[i]) * Math.PI * 2) * (i % 2 === 0 ? 1 : -1);
-        dot.style.top = `calc(50% + ${Math.sin(angle) * radii[i]}px - 4px)`;
-        dot.style.left = `calc(50% + ${Math.cos(angle) * radii[i]}px - 4px)`;
-        dot.style.background = colors[i];
-        dot.style.boxShadow = `0 0 12px ${colors[i]}`;
-      });
-      requestAnimationFrame(animate);
-    };
-    requestAnimationFrame(animate);
-    return () => { running = false; };
-  }, []);
+    document.body.style.overflow = menuOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [menuOpen]);
 
-  // Particle & run-line data (stable via useMemo-style ref)
-  const particles = useRef(
-    Array.from({ length: 40 }, (_, i) => {
-      const cs = ['#2563eb', '#1a1a1a', '#c8a96e', '#16a34a'];
-      const c = cs[i % cs.length];
-      return {
-        left: `${Math.random() * 100}%`,
-        dur: `${8 + Math.random() * 15}s`,
-        delay: `-${Math.random() * 10}s`,
-        drift: `${(Math.random() - 0.5) * 200}px`,
-        size: Math.random() > 0.7 ? 3 : 2,
-        color: c,
-      };
-    })
-  ).current;
-  const runLines = useRef(
-    Array.from({ length: 14 }, (_, i) => {
-      const cs = ['#2563eb', '#1a1a1a', '#c8a96e'];
-      const c1 = cs[i % 3], c2 = cs[(i + 1) % 3];
-      return {
-        left: `${Math.random() * 100}%`,
-        dur: `${4 + Math.random() * 8}s`,
-        delay: `-${Math.random() * 8}s`,
-        gradient: `linear-gradient(transparent,${c1},${c2},transparent)`,
-      };
-    })
-  ).current;
+  const navItems = ['services', 'about', 'reviews', 'contact'];
+  const serviceColors = [
+    { bg: 'rgba(255,107,53,0.08)', color: '#ff6b35' },
+    { bg: 'rgba(30,58,95,0.08)', color: '#1e3a5f' },
+    { bg: 'rgba(245,158,11,0.08)', color: '#f59e0b' },
+    { bg: 'rgba(16,185,129,0.08)', color: '#10b981' },
+  ];
 
-  // ── Render ───────────────────────────────────────────────────────────────
   return (
     <>
-      {/* Custom Cursor */}
-      <div className="rga-cursor" style={{ transform: `translate(${cursorPos.x - 6}px,${cursorPos.y - 6}px)` }} />
-      <div className={`rga-cursor-ring${ringExpanded ? ' expanded' : ''}`}
-        style={{ transform: `translate(${ringPos.x - (ringExpanded ? 27 : 18)}px,${ringPos.y - (ringExpanded ? 27 : 18)}px)` }} />
-
-      {/* Background effects */}
-      <div className="rga-scanlines" />
-      <div className="rga-grid-bg" />
-
-      {/* Particles */}
-      <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 1 }}>
-        {particles.map((p, i) => (
-          <div key={i} className="rga-particle" style={{
-            left: p.left, width: p.size, height: p.size,
-            background: p.color, boxShadow: `0 0 6px ${p.color}`,
-            animationDuration: p.dur, animationDelay: p.delay,
-            '--drift': p.drift,
-          }} />
-        ))}
-      </div>
-
-      {/* Run lines */}
-      <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 1, overflow: 'hidden' }}>
-        {runLines.map((l, i) => (
-          <div key={i} className="rga-run-line" style={{
-            left: l.left, background: l.gradient,
-            animationDuration: l.dur, animationDelay: l.delay,
-          }} />
-        ))}
-      </div>
-
       {/* ── NAV ── */}
-      <nav className="rga-nav">
-        <a href="#home" className="rga-logo">
-          <RiselLogo
-            size={46}
-            style={{
-              borderRadius: 10,
-              animation: 'logoPulse 2.5s ease-in-out infinite',
-              filter: 'drop-shadow(0 0 10px rgba(37,99,235,0.25))'
-            }}
-          />
+      <nav className={`rga-nav${navScrolled ? ' scrolled' : ''}`}>
+        <a href="#home" className="rga-logo" onClick={e => { e.preventDefault(); scrollTo('home'); }}>
+          <div className="rga-logo-mark">R</div>
           <div>
-            <div className="rga-logo-text">RISEL</div>
-            <div className="rga-logo-sub">GROWTH AGENCY</div>
+            <div className="rga-logo-text">Risel Growth</div>
+            <div className="rga-logo-sub">Digital Agency</div>
           </div>
         </a>
+
         <ul className="rga-nav-links">
-          {['services', 'about', 'reviews', 'contact'].map(id => (
+          {navItems.map(id => (
             <li key={id}>
-              <a href={`#${id}`} onClick={e => { e.preventDefault(); scrollTo(id); }}
-                onMouseEnter={() => setRingExpanded(true)} onMouseLeave={() => setRingExpanded(false)}>
+              <a href={`#${id}`} onClick={e => { e.preventDefault(); scrollTo(id); }}>
                 {id.charAt(0).toUpperCase() + id.slice(1)}
               </a>
             </li>
           ))}
         </ul>
-        <button className="rga-nav-cta" onClick={() => scrollTo('contact')}
-          onMouseEnter={() => setRingExpanded(true)} onMouseLeave={() => setRingExpanded(false)}>
-          Get Started
+
+        <button className="rga-nav-cta" onClick={() => scrollTo('contact')}>
+          Let's Talk
+        </button>
+
+        <button
+          className={`rga-hamburger${menuOpen ? ' open' : ''}`}
+          onClick={() => setMenuOpen(!menuOpen)}
+          aria-label="Toggle menu"
+        >
+          <span /><span /><span />
         </button>
       </nav>
 
+      {/* Mobile overlay */}
+      <div className={`rga-mobile-overlay${menuOpen ? ' open' : ''}`}>
+        {navItems.map(id => (
+          <a key={id} href={`#${id}`} onClick={e => { e.preventDefault(); scrollTo(id); }}>
+            {id.charAt(0).toUpperCase() + id.slice(1)}
+          </a>
+        ))}
+        <button className="rga-nav-cta" style={{ marginTop: 12 }} onClick={() => scrollTo('contact')}>
+          Let's Talk
+        </button>
+      </div>
+
       {/* ── HERO ── */}
       <section className="rga-hero" id="home">
-        <div className="rga-hero-content">
-          <div className="rga-hero-tag"><span className="rga-dot" /><span>SYSTEM ONLINE — PREMIUM SOCIAL MEDIA GROWTH</span></div>
-          <h1 className="rga-hero-title">
-            <span className="line1">TURNING</span>
-            <span className="line2 rga-glitch">ATTENTION</span>
-            <span className="line1">INTO GROWTH</span>
-          </h1>
-          <p className="rga-hero-sub">We help brands rise above the noise, crafting data-driven strategies that drive engagement, growth, and long-term success across every major platform.</p>
-          <div className="rga-hero-btns">
-            <button className="rga-btn-primary" onClick={() => scrollTo('contact')}
-              onMouseEnter={() => setRingExpanded(true)} onMouseLeave={() => setRingExpanded(false)}>
-              GET STARTED
-            </button>
-            <button className="rga-btn-secondary" onClick={() => scrollTo('services')}
-              onMouseEnter={() => setRingExpanded(true)} onMouseLeave={() => setRingExpanded(false)}>
-              EXPLORE SERVICES
-            </button>
+        <div className="rga-hero-inner">
+          <div className="rga-hero-content">
+            <div className="rga-hero-badge">
+              <span className="rga-hero-badge-dot" />
+              Premium Social Media Growth
+            </div>
+            <h1 className="rga-hero-title">
+              We Turn Your <span className="highlight">Digital Presence</span> Into Real Growth
+            </h1>
+            <p className="rga-hero-sub">
+              We help brands rise above the noise, crafting data-driven strategies that drive engagement, growth, and long-term success across every major platform.
+            </p>
+            <div className="rga-hero-btns">
+              <button className="rga-btn-primary" onClick={() => scrollTo('contact')}>
+                Get Started Today
+              </button>
+              <button className="rga-btn-secondary" onClick={() => scrollTo('services')}>
+                Explore Services
+              </button>
+            </div>
           </div>
-        </div>
 
-        {/* Animated Orb */}
-        <div className="rga-hero-visual">
-          <div className="rga-hero-orb">
-            {[0, 1, 2].map(i => (
-              <div key={i} className="rga-orb-ring">
-                <div ref={el => orbRefs.current[i] = el} className="rga-orb-dot" />
+          <div className="rga-hero-visual">
+            <div className="rga-hero-graphic">
+              <div className="rga-hero-circle rga-hero-circle-1" />
+              <div className="rga-hero-circle rga-hero-circle-2" />
+              <div className="rga-hero-circle rga-hero-circle-3" />
+              <div className="rga-hero-center-icon">
+                <RocketIcon />
               </div>
-            ))}
-            <div className="rga-orb-core" />
+
+              {/* Floating badges */}
+              <div className="rga-float-badge" style={{ top: '10%', right: '-10%', animationDelay: '0s' }}>
+                <div className="rga-float-badge-icon" style={{ background: 'rgba(16,185,129,0.1)' }}>📈</div>
+                200+ Brands
+              </div>
+              <div className="rga-float-badge" style={{ bottom: '20%', left: '-5%', animationDelay: '-1.5s' }}>
+                <div className="rga-float-badge-icon" style={{ background: 'rgba(255,107,53,0.1)' }}>⭐</div>
+                98% Retention
+              </div>
+              <div className="rga-float-badge" style={{ bottom: '5%', right: '5%', animationDelay: '-3s' }}>
+                <div className="rga-float-badge-icon" style={{ background: 'rgba(30,58,95,0.1)' }}>🚀</div>
+                50M+ Reach
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* ── STATS ── */}
-      <div className="rga-stats-bar" ref={statsRef}>
-        {[
-          { val: `${stats.years}+`, label: 'Years Experience' },
-          { val: `${stats.brands}+`, label: 'Brands Served' },
-          { val: `${stats.retention}%`, label: 'Client Retention' },
-          { val: `${stats.reach}M+`, label: 'Reach Generated' },
-        ].map(({ val, label }, i) => (
-          <div key={i} className={`rga-stat-item rga-reveal${i > 0 ? ` rga-reveal-d${i}` : ''}`}>
-            <span className="rga-stat-number">{val}</span>
-            <span className="rga-stat-label">{label}</span>
-          </div>
-        ))}
-      </div>
-
-      {/* ── MARQUEE ── */}
-      <div className="rga-marquee-wrap">
-        <div className="rga-marquee-track">
-          {[...Array(2)].flatMap(() =>
-            ['INSTAGRAM GROWTH', 'TIKTOK ORGANIC', 'CONTENT CREATION',
-              'SOCIAL MEDIA CONSULTANCY', 'AI AUTOMATION', 'WHATSAPP BOOKING AI',
-              'LEAD QUALIFICATION', 'INSTA DM AUTOMATION'].map((t, i) => (
-                <span key={`${t}-${i}`} className="rga-marquee-item">{t}</span>
-              ))
-          )}
+      <div className="rga-stats" ref={statsRef}>
+        <div className="rga-stats-inner">
+          {[
+            { val: `${stats.years}+`, label: 'Years Experience' },
+            { val: `${stats.brands}+`, label: 'Brands Served' },
+            { val: `${stats.retention}%`, label: 'Client Retention' },
+            { val: `${stats.reach}M+`, label: 'Reach Generated' },
+          ].map(({ val, label }, i) => (
+            <div key={i} className="rga-stat">
+              <span className="rga-stat-number">{val}</span>
+              <span className="rga-stat-label">{label}</span>
+            </div>
+          ))}
         </div>
       </div>
 
       {/* ── SERVICES ── */}
-      <section id="services" className="rga-section">
+      <section id="services" className="rga-section" style={{ background: 'var(--bg)' }}>
         <div className="rga-section-header rga-reveal">
-          <div className="rga-eyebrow">WHAT WE DO</div>
-          <h2 className="rga-section-title">OUR <span>SERVICES</span></h2>
-          <p className="rga-section-desc">Core social media growth services + cutting-edge AI automation to scale your business 24/7.</p>
+          <div className="rga-eyebrow">What We Do</div>
+          <h2 className="rga-section-title">Services That Drive <span>Real Results</span></h2>
+          <p className="rga-section-desc">Core social media growth services paired with cutting-edge AI automation to scale your business around the clock.</p>
         </div>
 
-        {/* Core 4 */}
         <div className="rga-services-grid">
           {[
             {
-              icon: <InstagramIcon />, name: 'INSTAGRAM', sub: 'ORGANIC GROWTH', color: 'var(--accent)',
-              desc: 'Grow your Instagram organically with real followers who genuinely engage. Increase reach, visibility, and brand trust. No bots — just consistent, long-term results.'
+              icon: <InstagramIcon />, name: 'Instagram Growth', sub: 'Organic Strategy',
+              desc: 'Grow your Instagram organically with real followers who genuinely engage. Increase reach, visibility, and brand trust with proven strategies — no bots, just consistent, long-term results.',
+              ci: 0
             },
             {
-              icon: <TikTokIcon />, name: 'TIKTOK', sub: 'ORGANIC GROWTH', color: 'var(--dark)',
-              desc: 'Grow your TikTok organically with real followers who engage. Boost views, reach, and visibility using proven growth strategies. Real, consistent results only.'
+              icon: <TikTokIcon />, name: 'TikTok Growth', sub: 'Organic Strategy',
+              desc: 'Grow your TikTok organically with real followers who engage. Boost views, reach, and visibility using proven growth strategies designed for sustainable, authentic results.',
+              ci: 1
             },
             {
-              icon: <ContentIcon />, name: 'CONTENT', sub: 'SOCIAL MEDIA CREATION', color: 'var(--gold)',
-              desc: 'Professional social media content creation tailored to your brand. Engaging visuals and captions designed to boost reach. Consistent, high-quality content that drives results.'
+              icon: <ContentIcon />, name: 'Content Creation', sub: 'Social Media',
+              desc: 'Professional social media content tailored to your brand. Engaging visuals and captions designed to boost reach, with consistent, high-quality content that drives real results.',
+              ci: 2
             },
             {
-              icon: <ConsultIcon />, name: 'CONSULTANCY', sub: 'SOCIAL MEDIA', color: 'var(--green)',
-              desc: 'Expert social media consultancy to grow strategically and sustainably. Personalized guidance on content, growth, and platform optimization that turns followers into results.'
+              icon: <ConsultIcon />, name: 'Consultancy', sub: 'Social Media',
+              desc: 'Expert social media consultancy to help you grow strategically and sustainably. Personalized guidance on content, growth, and platform optimization that turns followers into results.',
+              ci: 3
             },
-          ].map(({ icon, name, sub, color, desc }, i) => (
-            <div key={i} className={`rga-service-card rga-reveal${i > 0 ? ` rga-reveal-d${i}` : ''}`}
-              style={{ '--card-color': color }}
-              onMouseEnter={() => setRingExpanded(true)} onMouseLeave={() => setRingExpanded(false)}>
-              <div className="rga-service-icon" style={{ '--card-color': color }}>
-                <div style={{ color }}>{icon}</div>
+          ].map(({ icon, name, sub, desc, ci }, i) => (
+            <div key={i} className={`rga-service-card rga-reveal${i > 0 ? ` rga-reveal-d${Math.min(i,3)}` : ''}`}
+              style={{ '--card-accent': serviceColors[ci].color }}>
+              <div className="rga-service-icon" style={{ background: serviceColors[ci].bg, color: serviceColors[ci].color }}>
+                {icon}
               </div>
               <div className="rga-service-name">{name}</div>
-              <div className="rga-service-sub" style={{ color }}>{sub}</div>
+              <div className="rga-service-sub" style={{ color: serviceColors[ci].color }}>{sub}</div>
               <p className="rga-service-desc">{desc}</p>
             </div>
           ))}
         </div>
 
-        {/* AI 3 */}
-        <div className="rga-ai-label rga-reveal" style={{ marginTop: 50 }}>NEW — AI-POWERED AUTOMATION SERVICES</div>
-        <div className="rga-ai-services-grid">
+        <div className="rga-ai-divider rga-reveal">AI-POWERED AUTOMATION</div>
+
+        <div className="rga-services-grid">
           {[
             {
-              icon: <DMIcon />, name: 'INSTA DM AUTOMATION', sub: 'AUTO-REPLY 24/7', color: 'var(--no)',
-              desc: 'AI-powered Instagram DM automation that responds to leads instantly, 24/7. Auto-qualify prospects, answer FAQs, send offers, and book calls — all on autopilot. Never miss a lead again.'
+              icon: <DMIcon />, name: 'Insta DM Automation', sub: 'Auto-Reply 24/7',
+              desc: 'AI-powered Instagram DM automation that responds to leads instantly, 24/7. Auto-qualify prospects, answer FAQs, send offers, and book calls — all on autopilot.',
+              ci: 3
             },
             {
-              icon: <WhatsAppIcon />, name: 'WHATSAPP BOOKING AI', sub: 'SALES CHAT BOT', color: 'var(--green)',
-              desc: 'WhatsApp AI sales agent that chats with prospects, handles objections, presents packages, and books appointments automatically. Your 24/7 sales rep that never sleeps.'
+              icon: <WhatsAppIcon />, name: 'WhatsApp Booking AI', sub: 'Sales Chat Bot',
+              desc: 'WhatsApp AI sales agent that chats with prospects, handles objections, presents packages, and books appointments automatically. Your 24/7 sales rep that never sleeps.',
+              ci: 3
             },
             {
-              icon: <LeadIcon />, name: 'LEAD QUALIFICATION', sub: 'AI SALES SYSTEM', color: 'var(--green)',
-              desc: 'Intelligent AI lead qualification system that filters, scores, and prioritizes your hottest prospects automatically. Only serious buyers reach your calendar — maximizing conversions.'
+              icon: <LeadIcon />, name: 'Lead Qualification', sub: 'AI Sales System',
+              desc: 'Intelligent AI lead qualification system that filters, scores, and prioritizes your hottest prospects automatically. Only serious buyers reach your calendar — maximizing conversions.',
+              ci: 3
             },
-          ].map(({ icon, name, sub, color, desc }, i) => (
+          ].map(({ icon, name, sub, desc, ci }, i) => (
             <div key={i} className={`rga-service-card rga-reveal${i > 0 ? ` rga-reveal-d${i}` : ''}`}
-              style={{ '--card-color': color }}
-              onMouseEnter={() => setRingExpanded(true)} onMouseLeave={() => setRingExpanded(false)}>
-              <div className="rga-ai-badge">AI POWERED</div>
-              <div className="rga-service-icon" style={{ '--card-color': color }}>
-                <div style={{ color }}>{icon}</div>
+              style={{ '--card-accent': '#10b981' }}>
+              <div className="rga-ai-tag">AI Powered</div>
+              <div className="rga-service-icon" style={{ background: 'var(--green-bg)', color: 'var(--green)' }}>
+                {icon}
               </div>
-              <div className="rga-service-name" style={{ color }}>{name}</div>
-              <div className="rga-service-sub" style={{ color }}>{sub}</div>
+              <div className="rga-service-name">{name}</div>
+              <div className="rga-service-sub" style={{ color: 'var(--green)' }}>{sub}</div>
               <p className="rga-service-desc">{desc}</p>
             </div>
           ))}
@@ -1078,15 +1107,17 @@ export default function RiselGrowthAgency() {
       </section>
 
       {/* ── ABOUT ── */}
-      <section id="about" className="rga-section" style={{ background: 'var(--bk)' }}>
+      <section id="about" className="rga-section" style={{ background: 'var(--bg-section)' }}>
         <div className="rga-about-inner">
           <div>
-            <div className="rga-eyebrow">ABOUT US</div>
-            <h2 className="rga-about-heading rga-reveal">About <span>Risel Growth</span> Agency</h2>
+            <div className="rga-eyebrow" style={{ justifyContent: 'flex-start' }}>About Us</div>
+            <h2 className="rga-about-heading rga-reveal">
+              About <span>Risel Growth</span> Agency
+            </h2>
             <p className="rga-about-body rga-reveal">
-              Risel Growth Agency is a full-service social media growth and marketing agency with over 4 years of proven experience across all major platforms. We have successfully worked with both individuals and big brands, helping them build a strong digital presence, increase engagement, and drive real results. Our expertise includes organic growth, content creation, social media consultancy, TikTok Shop management, and cutting-edge AI automation.
+              Risel Growth Agency is a full-service social media growth and marketing agency with over 4 years of proven experience across all major platforms. We've successfully worked with both individuals and major brands, helping them build a strong digital presence, increase engagement, and drive real results. Our expertise spans organic growth, content creation, social media consultancy, TikTok Shop management, and cutting-edge AI automation.
             </p>
-            <div className="rga-about-pillars">
+            <div className="rga-pillars">
               {[
                 { code: 'ORG', title: 'Organic Growth Expertise', desc: 'Authentic audiences, measurable growth, and sustainable impact for businesses worldwide.' },
                 { code: 'AI', title: 'AI-Powered Automation', desc: 'Cutting-edge AI tools that automate DMs, bookings, and lead qualification 24/7.' },
@@ -1102,14 +1133,14 @@ export default function RiselGrowthAgency() {
               ))}
             </div>
           </div>
+
           <div className="rga-vmg-stack">
             {[
-              { icon: '👁', title: 'VISION', desc: 'To help brands and individuals achieve real, authentic growth on social media.' },
-              { icon: '🎯', title: 'MISSION', desc: 'Deliver creative, results-driven strategies for engagement, visibility, and conversions.' },
-              { icon: '📋', title: 'LONG-TERM PLAN', desc: 'To lead in social media growth and AI automation, delivering real results and lasting success.' },
+              { icon: '👁️', title: 'VISION', desc: 'To help brands and individuals achieve real, authentic growth on social media — building communities, not just numbers.' },
+              { icon: '🎯', title: 'MISSION', desc: 'Deliver creative, results-driven strategies that boost engagement, visibility, and conversions for every client we serve.' },
+              { icon: '📋', title: 'LONG-TERM PLAN', desc: 'To lead the industry in social media growth and AI automation, delivering real results and lasting success for our partners.' },
             ].map(({ icon, title, desc }, i) => (
-              <div key={i} className={`rga-vmg-card rga-reveal${i > 0 ? ` rga-reveal-d${i}` : ''}`}
-                onMouseEnter={() => setRingExpanded(true)} onMouseLeave={() => setRingExpanded(false)}>
+              <div key={i} className={`rga-vmg-card rga-reveal${i > 0 ? ` rga-reveal-d${i}` : ''}`}>
                 <div className="rga-vmg-icon">{icon}</div>
                 <div>
                   <div className="rga-vmg-title">{title}</div>
@@ -1124,48 +1155,54 @@ export default function RiselGrowthAgency() {
       {/* ── BRANDS ── */}
       <section className="rga-section" style={{ background: 'var(--bg)' }}>
         <div className="rga-section-header rga-reveal">
-          <div className="rga-eyebrow">TRUSTED BY</div>
-          <h2 className="rga-section-title">TOP <span>BRANDS</span></h2>
-          <p className="rga-section-desc">Empowering Brands, Elevating Success</p>
+          <div className="rga-eyebrow">Trusted By</div>
+          <h2 className="rga-section-title">Brands That <span>Trust Us</span></h2>
+          <p className="rga-section-desc">Empowering brands with strategies that elevate their success.</p>
         </div>
         <div className="rga-brands-grid">
           {[
-            { name: 'FLEUR & COMPAGNIE', icon: <FleurIcon /> },
-            { name: 'ADOPTERZ', icon: <AdopterzIcon /> },
-            { name: 'MAGNIFISCIENCE', icon: <MagnifiscienceIcon /> },
-            { name: 'EAN ELLIOT', icon: <EanElliotIcon /> },
-            { name: '365DIGITAL', icon: <Digital365Icon /> },
+            { name: 'Fleur & Compagnie', icon: <FleurIcon /> },
+            { name: 'Adopterz', icon: <AdopterzIcon /> },
+            { name: 'Magnifiscience', icon: <MagnifiscienceIcon /> },
+            { name: 'Ean Elliot', icon: <EanElliotIcon /> },
+            { name: '365Digital', icon: <Digital365Icon /> },
             { name: 'KFC', icon: <KFCIcon /> },
           ].map((b, i) => (
-            <div key={i} className={`rga-brand-badge rga-reveal${i % 3 > 0 ? ` rga-reveal-d${i % 3}` : ''}`}
-              style={{ display: 'flex', alignItems: 'center', gap: '10px' }}
-              onMouseEnter={() => setRingExpanded(true)} onMouseLeave={() => setRingExpanded(false)}>
-              <span style={{ color: 'var(--accent)', display: 'inline-flex', alignItems: 'center' }}>{b.icon}</span>
-              <span>{b.name}</span>
+            <div key={i} className={`rga-brand-badge rga-reveal${i % 3 > 0 ? ` rga-reveal-d${i % 3}` : ''}`}>
+              <span style={{ display: 'inline-flex', alignItems: 'center', color: 'var(--accent)' }}>{b.icon}</span>
+              {b.name}
             </div>
           ))}
         </div>
       </section>
 
       {/* ── TESTIMONIALS ── */}
-      <section id="reviews" className="rga-section" style={{ background: 'var(--bk)' }}>
+      <section id="reviews" className="rga-section" style={{ background: 'var(--bg-section)' }}>
         <div className="rga-section-header rga-reveal">
-          <div className="rga-eyebrow">CLIENT FEEDBACK</div>
-          <h2 className="rga-section-title"><span>TESTIMONIALS</span></h2>
+          <div className="rga-eyebrow">Client Feedback</div>
+          <h2 className="rga-section-title">What Our <span>Clients Say</span></h2>
+          <p className="rga-section-desc">Don't just take our word for it — hear from the brands we've helped grow.</p>
         </div>
         <div className="rga-testi-grid">
           {[
-            { text: 'Working with Risel Growth Agency was a great experience. They managed our social media with a clear strategy, consistent content planning, and strong audience targeting. We saw noticeable improvement in engagement, reach, and brand visibility.', logo: <FleurIcon />, name: 'Mehdi', company: 'FLEUR & COMPAGNIE' },
-            { text: 'Risel Growth Agency delivered excellent social media marketing services for our brand. From content strategy to audience engagement, everything was handled professionally. Our follower growth and interaction rate improved steadily.', logo: <AdopterzIcon />, name: 'Tony', company: 'ADOPTERZ' },
-            { text: 'Risel Growth Agency played a key role in enhancing our online presence. Their social media strategies helped us reach the right audience and build trust with our community. The content planning made a real difference in brand growth.', logo: <MagnifiscienceIcon />, name: 'Margaux', company: 'MAGNIFISCIENCE' },
-          ].map(({ text, logo, name, company }, i) => (
-            <div key={i} className={`rga-testi-card rga-reveal${i > 0 ? ` rga-reveal-d${i}` : ''}`}
-              onMouseEnter={() => setRingExpanded(true)} onMouseLeave={() => setRingExpanded(false)}>
-              <p className="rga-testi-text">{text}</p>
-              <div className="rga-testi-brand">
-                <div className="rga-testi-logo">
-                  <span style={{ display: 'inline-flex', width: 20, height: 20 }}>{logo}</span>
-                </div>
+            {
+              text: 'Working with Risel Growth Agency was a great experience. They managed our social media with a clear strategy, consistent content planning, and strong audience targeting. We saw noticeable improvement in engagement, reach, and brand visibility.',
+              name: 'Mehdi', company: 'Fleur & Compagnie', initial: 'M'
+            },
+            {
+              text: 'Risel Growth Agency delivered excellent social media marketing services for our brand. From content strategy to audience engagement, everything was handled professionally. Our follower growth and interaction rate improved steadily.',
+              name: 'Tony', company: 'Adopterz', initial: 'T'
+            },
+            {
+              text: 'Risel Growth Agency played a key role in enhancing our online presence. Their social media strategies helped us reach the right audience and build trust with our community. The content planning made a real difference in brand growth.',
+              name: 'Margaux', company: 'Magnifiscience', initial: 'M'
+            },
+          ].map(({ text, name, company, initial }, i) => (
+            <div key={i} className={`rga-testi-card rga-reveal${i > 0 ? ` rga-reveal-d${i}` : ''}`}>
+              <div className="rga-testi-stars">★★★★★</div>
+              <p className="rga-testi-text">"{text}"</p>
+              <div className="rga-testi-author">
+                <div className="rga-testi-avatar">{initial}</div>
                 <div>
                   <div className="rga-testi-name">{name}</div>
                   <div className="rga-testi-company">{company}</div>
@@ -1179,17 +1216,21 @@ export default function RiselGrowthAgency() {
       {/* ── CONTACT ── */}
       <section id="contact" className="rga-section" style={{ background: 'var(--bg)' }}>
         <div className="rga-section-header rga-reveal">
-          <div className="rga-eyebrow">REACH OUT</div>
-          <h2 className="rga-section-title">CONTACT <span>US</span></h2>
+          <div className="rga-eyebrow">Get In Touch</div>
+          <h2 className="rga-section-title">Let's Start <span>Growing Together</span></h2>
         </div>
-        <div className="rga-contact-wrap">
+        <div className="rga-contact-inner">
           <div>
-            <h3 className="rga-contact-heading rga-reveal">Let's Build Something <span style={{ color: 'var(--accent)' }}>Extraordinary</span></h3>
-            <p className="rga-contact-desc rga-reveal">Ready to scale your social media presence or automate your sales with AI? Get in touch and let's craft a strategy that delivers real, measurable results.</p>
+            <h3 className="rga-contact-heading rga-reveal">
+              Ready to build something <span>extraordinary?</span>
+            </h3>
+            <p className="rga-contact-desc rga-reveal">
+              Ready to scale your social media presence or automate your sales with AI? Get in touch and let's craft a strategy that delivers real, measurable results.
+            </p>
             <div className="rga-contact-details">
               {[
-                { label: 'PHONE', value: '+92 335 8169111' },
-                { label: 'EMAIL', value: 'riselgrowthagency@gmail.com' },
+                { label: 'Phone', value: '+92 335 8169111' },
+                { label: 'Email', value: 'riselgrowthagency@gmail.com' },
               ].map(({ label, value }, i) => (
                 <div key={i} className={`rga-contact-detail rga-reveal${i > 0 ? ' rga-reveal-d1' : ''}`}>
                   <div className="rga-detail-label">{label}</div>
@@ -1199,51 +1240,46 @@ export default function RiselGrowthAgency() {
             </div>
           </div>
 
-          <form className="rga-contact-form rga-reveal" onSubmit={handleSubmit}>
+          <form className="rga-form rga-reveal" onSubmit={handleSubmit}>
             <div className="rga-form-row">
               <div className="rga-form-group">
-                <label className="rga-form-label">YOUR NAME *</label>
+                <label className="rga-form-label">Your Name *</label>
                 <input className="rga-form-input" type="text" placeholder="Enter your name"
                   value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} />
               </div>
               <div className="rga-form-group">
-                <label className="rga-form-label">YOUR EMAIL *</label>
+                <label className="rga-form-label">Your Email *</label>
                 <input className="rga-form-input" type="email" placeholder="Enter your email"
                   value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} />
               </div>
             </div>
             <div className="rga-form-group">
-              <label className="rga-form-label">PHONE NUMBER</label>
+              <label className="rga-form-label">Phone Number</label>
               <input className="rga-form-input" type="tel" placeholder="Enter your phone"
                 value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} />
             </div>
             <div className="rga-form-group">
-              <label className="rga-form-label">YOUR MESSAGE *</label>
+              <label className="rga-form-label">Your Message *</label>
               <textarea className="rga-form-textarea" placeholder="Tell us about your project..."
                 value={form.message} onChange={e => setForm({ ...form, message: e.target.value })} />
             </div>
             {formMsg && <div className={`rga-form-msg ${formMsg.type}`}>{formMsg.text}</div>}
-            <button className="rga-btn-submit" type="submit"
-              onMouseEnter={() => setRingExpanded(true)} onMouseLeave={() => setRingExpanded(false)}>
-              SEND MESSAGE →
-            </button>
+            <button className="rga-btn-submit" type="submit">Send Message →</button>
           </form>
         </div>
       </section>
 
       {/* ── FOLLOW ── */}
-      <div className="rga-follow-section">
-        <div className="rga-eyebrow" style={{ marginBottom: 16 }}>STAY CONNECTED</div>
-        <h2 className="rga-section-title">FOLLOW <span>US</span></h2>
+      <div className="rga-follow">
+        <div className="rga-eyebrow" style={{ marginBottom: 16 }}>Stay Connected</div>
+        <h2 className="rga-section-title">Follow <span>Us</span></h2>
         <div className="rga-social-btns">
           {[
-            { icon: <InstagramIcon />, label: 'INSTAGRAM', href: 'https://www.instagram.com/riselgrowthagency' },
-            { icon: <TikTokIcon />, label: 'TIKTOK', href: 'https://www.tiktok.com/@riselgrowthagency' },
+            { icon: <InstagramIcon />, label: 'Instagram', href: 'https://www.instagram.com/riselgrowthagency' },
+            { icon: <TikTokIcon />, label: 'TikTok', href: 'https://www.tiktok.com/@riselgrowthagency' },
           ].map(({ icon, label, href }) => (
-            <a key={label} className="rga-social-btn" href={href} target="_blank" rel="noreferrer"
-              style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
-              onMouseEnter={() => setRingExpanded(true)} onMouseLeave={() => setRingExpanded(false)}>
-              <span style={{ display: 'inline-flex', width: 18, height: 18 }}>{icon}</span> {label}
+            <a key={label} className="rga-social-btn" href={href} target="_blank" rel="noreferrer">
+              {icon} {label}
             </a>
           ))}
         </div>
@@ -1251,8 +1287,8 @@ export default function RiselGrowthAgency() {
 
       {/* ── FOOTER ── */}
       <footer className="rga-footer">
-        <div className="rga-footer-left">© 2026 RISEL GROWTH AGENCY — ALL RIGHTS RESERVED</div>
-        <div className="rga-footer-right">SYSTEM v2.6 | ONLINE</div>
+        <div className="rga-footer-left">© 2026 Risel Growth Agency — All Rights Reserved</div>
+        <div className="rga-footer-right">Crafted with care</div>
       </footer>
     </>
   );
