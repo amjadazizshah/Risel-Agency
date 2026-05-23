@@ -1,4 +1,10 @@
 import { useState, useEffect, useRef } from "react";
+import fleurLogo from './assets/Fleur.png';
+import adopterzLogo from './assets/Adopterz.png';
+import magnifiscienceLogo from './assets/Magnifiscience.png';
+import eanElliotLogo from './assets/EanElliot.png';
+import logo365 from './assets/365Digital.png';
+import kfcLogo from './assets/KFC.png';
 
 // ─── CSS ────────────────────────────────────────────────────────────────────
 const STYLES = `
@@ -766,59 +772,6 @@ const RocketIcon = () => (
     <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" />
   </svg>
 );
-const FleurIcon = () => (
-  <svg viewBox="0 0 24 24" style={{ width: 20, height: 20, stroke: 'currentColor', fill: 'none', strokeWidth: 1.5 }}>
-    <path d="M12 2C12 2 8 6 8 10C8 14.5 12 18 12 22C12 22 16 14.5 16 10C16 6 12 2 12 2Z" />
-    <path d="M12 10C10.5 7.5 7 7 7 7C7 7 8 10.5 10 12" />
-    <path d="M12 10C13.5 7.5 17 7 17 7C17 7 16 10.5 14 12" />
-  </svg>
-);
-const AdopterzIcon = ({ size = 20 }) => (
-  <svg viewBox="0 0 100 100" width={size} height={size} style={{ fill: 'none', strokeWidth: 9 }}>
-    <defs>
-      <linearGradient id="ag1" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="#a855f7" /><stop offset="100%" stopColor="#ec4899" />
-      </linearGradient>
-      <linearGradient id="ag2" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="#f97316" /><stop offset="100%" stopColor="#ec4899" />
-      </linearGradient>
-    </defs>
-    <path d="M35 55 L55 25 L80 75" stroke="url(#ag1)" strokeLinecap="round" strokeLinejoin="round" />
-    <path d="M20 75 L35 55 L48 72" stroke="url(#ag2)" strokeLinecap="round" strokeLinejoin="round" />
-  </svg>
-);
-const MagnifiscienceIcon = ({ size = 36 }) => (
-  <svg viewBox="0 0 100 40" width={size} height={size * 0.4} style={{ fill: 'currentColor', stroke: 'none' }}>
-    <circle cx="10" cy="10" r="2.2" /><circle cx="20" cy="13" r="2.2" />
-    <circle cx="30" cy="20" r="2.2" /><circle cx="40" cy="27" r="2.2" />
-    <circle cx="50" cy="30" r="2.2" /><circle cx="60" cy="27" r="2.2" />
-    <circle cx="70" cy="20" r="2.2" /><circle cx="80" cy="13" r="2.2" />
-    <circle cx="90" cy="10" r="2.2" />
-    <circle cx="10" cy="30" r="2.2" /><circle cx="20" cy="27" r="2.2" />
-    <circle cx="30" cy="20" r="2.2" /><circle cx="40" cy="13" r="2.2" />
-    <circle cx="50" cy="10" r="2.2" /><circle cx="60" cy="13" r="2.2" />
-    <circle cx="70" cy="20" r="2.2" /><circle cx="80" cy="27" r="2.2" />
-    <circle cx="90" cy="30" r="2.2" />
-  </svg>
-);
-const EanElliotIcon = () => (
-  <svg viewBox="0 0 24 24" style={{ width: 20, height: 20, stroke: 'currentColor', fill: 'none', strokeWidth: 1.5 }}>
-    <path d="M12 3L4 6v6c0 5.25 3.42 10.16 8 11 4.58-.84 8-5.75 8-11V6l-8-3z" />
-    <path d="M9 8h6v3H9v3h6" />
-  </svg>
-);
-const Digital365Icon = () => (
-  <svg viewBox="0 0 24 24" style={{ width: 20, height: 20, stroke: 'currentColor', fill: 'none', strokeWidth: 1.5 }}>
-    <path d="M7 12a5 5 0 1110 0 5 5 0 01-10 0z" />
-    <path d="M12 2v6M12 16v6M2 12h6M16 12h6" />
-  </svg>
-);
-const KFCIcon = () => (
-  <svg viewBox="0 0 24 24" style={{ width: 20, height: 20, stroke: 'currentColor', fill: 'none', strokeWidth: 1.5 }}>
-    <path d="M6 3h12l-2 15H8L6 3z" />
-    <path d="M10 3v15M14 3v15" />
-  </svg>
-);
 
 // ─── Main Component ──────────────────────────────────────────────────────────
 export default function RiselGrowthAgency() {
@@ -1060,7 +1013,7 @@ export default function RiselGrowthAgency() {
               ci: 3
             },
           ].map(({ icon, name, sub, desc, ci }, i) => (
-            <div key={i} className={`rga-service-card rga-reveal${i > 0 ? ` rga-reveal-d${Math.min(i,3)}` : ''}`}
+            <div key={i} className={`rga-service-card rga-reveal${i > 0 ? ` rga-reveal-d${Math.min(i, 3)}` : ''}`}
               style={{ '--card-accent': serviceColors[ci].color }}>
               <div className="rga-service-icon" style={{ background: serviceColors[ci].bg, color: serviceColors[ci].color }}>
                 {icon}
@@ -1161,16 +1114,35 @@ export default function RiselGrowthAgency() {
         </div>
         <div className="rga-brands-grid">
           {[
-            { name: 'Fleur & Compagnie', icon: <FleurIcon /> },
-            { name: 'Adopterz', icon: <AdopterzIcon /> },
-            { name: 'Magnifiscience', icon: <MagnifiscienceIcon /> },
-            { name: 'Ean Elliot', icon: <EanElliotIcon /> },
-            { name: '365Digital', icon: <Digital365Icon /> },
-            { name: 'KFC', icon: <KFCIcon /> },
+            { name: 'Fleur & Compagnie', logo: fleurLogo },
+            { name: 'Adopterz', logo: adopterzLogo },
+            { name: 'Magnifiscience', logo: magnifiscienceLogo },
+            { name: 'Ean Elliot', logo: eanElliotLogo },
+            { name: '365Digital', logo: logo365 },
+            { name: 'KFC', logo: kfcLogo },
           ].map((b, i) => (
-            <div key={i} className={`rga-brand-badge rga-reveal${i % 3 > 0 ? ` rga-reveal-d${i % 3}` : ''}`}>
-              <span style={{ display: 'inline-flex', alignItems: 'center', color: 'var(--accent)' }}>{b.icon}</span>
-              {b.name}
+            <div key={i} className={`rga-brand-badge ...`}>
+              <img
+                src={b.logo}
+                alt={b.name}
+                style={{
+                  height: '32px',
+                  width: 'auto',
+                  maxWidth: '100px',
+                  objectFit: 'contain',
+                  filter: 'grayscale(100%)',
+                  opacity: 0.7,
+                  transition: 'all 0.3s'
+                }}
+                onMouseEnter={e => {
+                  e.target.style.filter = 'grayscale(0%)';
+                  e.target.style.opacity = '1';
+                }}
+                onMouseLeave={e => {
+                  e.target.style.filter = 'grayscale(100%)';
+                  e.target.style.opacity = '0.7';
+                }}
+              />
             </div>
           ))}
         </div>
