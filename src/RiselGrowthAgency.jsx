@@ -5,6 +5,7 @@ import magnifiscienceLogo from './assets/Magnifiscience.png';
 import eanElliotLogo from './assets/EanElliot.png';
 import logo365 from './assets/365Digital.png';
 import kfcLogo from './assets/KFC.png';
+import { motion } from "framer-motion";
 
 // ─── CSS ────────────────────────────────────────────────────────────────────
 const STYLES = `
@@ -772,6 +773,38 @@ const RocketIcon = () => (
     <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" />
   </svg>
 );
+const GrowIcon = () => (
+  <svg viewBox="0 0 24 24" style={{ width: 24, height: 24, stroke: 'currentColor', fill: 'none', strokeWidth: 1.5 }}>
+    <path d="M12 22v-6" />
+    <path d="M4 22H15" />
+    <path d="M9 22h-7" />
+    <path d="M5 22l4-14 4 14" />
+    <path d="M9.5 8a4.5 4.5 0 100-9 4.5 4.5 0 000 9z" />
+  </svg>
+);
+
+const CommunityIcon = () => (
+  <svg viewBox="0 0 24 24" style={{ width: 24, height: 24, stroke: 'currentColor', fill: 'none', strokeWidth: 1.5 }}>
+    <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+    <circle cx="9" cy="7" r="4" />
+    <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" />
+  </svg>
+);
+
+const TargetIcon = () => (
+  <svg viewBox="0 0 24 24" style={{ width: 24, height: 24, stroke: 'currentColor', fill: 'none', strokeWidth: 1.5 }}>
+    <circle cx="12" cy="12" r="10" />
+    <circle cx="12" cy="12" r="6" />
+    <circle cx="12" cy="12" r="2" />
+  </svg>
+);
+
+const ClockIcon = () => (
+  <svg viewBox="0 0 24 24" style={{ width: 24, height: 24, stroke: 'currentColor', fill: 'none', strokeWidth: 1.5 }}>
+    <circle cx="12" cy="12" r="10" />
+    <polyline points="12 6 12 12 16 14" />
+  </svg>
+);
 
 // ─── Main Component ──────────────────────────────────────────────────────────
 export default function RiselGrowthAgency() {
@@ -1106,48 +1139,117 @@ export default function RiselGrowthAgency() {
       </section>
 
       {/* ── BRANDS ── */}
-      <section className="rga-section" style={{ background: 'var(--bg)' }}>
-        <div className="rga-section-header rga-reveal">
+      <section className="rga-section" style={{ background: 'var(--bg)', overflow: 'hidden', padding: '80px 0' }}>
+        <div className="rga-section-header rga-reveal" style={{ padding: '0 40px' }}>
           <div className="rga-eyebrow">Trusted By</div>
           <h2 className="rga-section-title">Brands That <span>Trust Us</span></h2>
           <p className="rga-section-desc">Empowering brands with strategies that elevate their success.</p>
         </div>
-        <div className="rga-brands-grid">
-          {[
-            { name: 'Fleur & Compagnie', logo: fleurLogo },
-            { name: 'Adopterz', logo: adopterzLogo },
-            { name: 'Magnifiscience', logo: magnifiscienceLogo },
-            { name: 'Ean Elliot', logo: eanElliotLogo },
-            { name: '365Digital', logo: logo365 },
-            { name: 'KFC', logo: kfcLogo },
-          ].map((b, i) => (
-            <div key={i} className={`rga-brand-badge ...`}>
-              <img
-                src={b.logo}
-                alt={b.name}
-                style={{
-                  height: '32px',
-                  width: 'auto',
-                  maxWidth: '100px',
-                  objectFit: 'contain',
-                  filter: 'grayscale(100%)',
-                  opacity: 0.7,
-                  transition: 'all 0.3s'
-                }}
-                onMouseEnter={e => {
-                  e.target.style.filter = 'grayscale(0%)';
-                  e.target.style.opacity = '1';
-                }}
-                onMouseLeave={e => {
-                  e.target.style.filter = 'grayscale(100%)';
-                  e.target.style.opacity = '0.7';
-                }}
-              />
-            </div>
-          ))}
+
+        {/* Row 1 — moves left */}
+        <div style={{ overflow: 'hidden', position: 'relative', marginBottom: '24px' }}>
+
+          {/* Fade left edge */}
+          <div style={{
+            position: 'absolute', left: 0, top: 0, width: '150px', height: '100%',
+            background: 'linear-gradient(to right, #ffffff, transparent)',
+            zIndex: 2, pointerEvents: 'none'
+          }} />
+
+          {/* Fade right edge */}
+          <div style={{
+            position: 'absolute', right: 0, top: 0, width: '150px', height: '100%',
+            background: 'linear-gradient(to left, #ffffff, transparent)',
+            zIndex: 2, pointerEvents: 'none'
+          }} />
+
+          <motion.div
+            style={{ display: 'flex', gap: '24px', width: 'max-content' }}
+            animate={{ x: ['0%', '-50%'] }}
+            transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+          >
+            {[...Array(2)].map((_, repeat) => (
+              [fleurLogo, adopterzLogo, magnifiscienceLogo, eanElliotLogo, logo365, kfcLogo]
+                .map((logo, i) => (
+                  <motion.div
+                    key={`${repeat}-${i}`}
+                    whileHover={{ y: -6, scale: 1.05 }}
+                    style={{
+                      padding: '20px 36px',
+                      background: '#fff',
+                      borderRadius: '14px',
+                      border: '1px solid #e8e4df',
+                      boxShadow: '0 4px 20px rgba(0,0,0,0.05)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0,
+                      cursor: 'pointer',
+                    }}
+                  >
+                    <img
+                      src={logo}
+                      alt={`brand-${i}`}
+                      style={{ height: '44px', width: 'auto', maxWidth: '130px', objectFit: 'contain' }}
+                    />
+                  </motion.div>
+                ))
+            ))}
+          </motion.div>
+        </div>
+
+        {/* Row 2 — moves right (opposite direction) */}
+        <div style={{ overflow: 'hidden', position: 'relative' }}>
+
+          {/* Fade left edge */}
+          <div style={{
+            position: 'absolute', left: 0, top: 0, width: '150px', height: '100%',
+            background: 'linear-gradient(to right, #ffffff, transparent)',
+            zIndex: 2, pointerEvents: 'none'
+          }} />
+
+          {/* Fade right edge */}
+          <div style={{
+            position: 'absolute', right: 0, top: 0, width: '150px', height: '100%',
+            background: 'linear-gradient(to left, #ffffff, transparent)',
+            zIndex: 2, pointerEvents: 'none'
+          }} />
+
+          <motion.div
+            style={{ display: 'flex', gap: '24px', width: 'max-content' }}
+            animate={{ x: ['-50%', '0%'] }}
+            transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+          >
+            {[...Array(2)].map((_, repeat) => (
+              [kfcLogo, logo365, eanElliotLogo, magnifiscienceLogo, adopterzLogo, fleurLogo]
+                .map((logo, i) => (
+                  <motion.div
+                    key={`${repeat}-${i}`}
+                    whileHover={{ y: -6, scale: 1.05 }}
+                    style={{
+                      padding: '20px 36px',
+                      background: '#fff',
+                      borderRadius: '14px',
+                      border: '1px solid #e8e4df',
+                      boxShadow: '0 4px 20px rgba(0,0,0,0.05)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0,
+                      cursor: 'pointer',
+                    }}
+                  >
+                    <img
+                      src={logo}
+                      alt={`brand-${i}`}
+                      style={{ height: '44px', width: 'auto', maxWidth: '130px', objectFit: 'contain' }}
+                    />
+                  </motion.div>
+                ))
+            ))}
+          </motion.div>
         </div>
       </section>
-
       {/* ── TESTIMONIALS ── */}
       <section id="reviews" className="rga-section" style={{ background: 'var(--bg-section)' }}>
         <div className="rga-section-header rga-reveal">
