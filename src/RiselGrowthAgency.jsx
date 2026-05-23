@@ -408,74 +408,140 @@ body {
   background: linear-gradient(90deg, transparent, rgba(16,185,129,0.3), transparent);
 }
 
-/* ─── About ─── */
-.rga-about-inner {
-  max-width: 1200px; margin: 0 auto;
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 80px; align-items: start;
+/* ABOUT SECTION */
+.about-section {
+  padding: 120px 8%;
+  background: #0f0f0f;
+  color: white;
 }
-.rga-about-heading {
-  font-family: 'DM Serif Display', serif;
-  font-size: clamp(28px, 3.5vw, 40px);
-  color: var(--text-dark); line-height: 1.2; margin-bottom: 20px;
-}
-.rga-about-heading span { color: var(--accent); }
-.rga-about-body {
-  font-size: 15px; color: var(--text); line-height: 1.8; margin-bottom: 32px;
-}
-.rga-pillars { display: flex; flex-direction: column; gap: 16px; }
-.rga-pillar {
-  display: flex; gap: 16px; align-items: flex-start;
-  padding: 20px; border-radius: var(--radius-sm);
-  border: 1px solid var(--border); background: #fff;
-  transition: var(--transition);
-}
-.rga-pillar:hover {
-  border-color: rgba(255,107,53,0.2);
-  box-shadow: 0 4px 16px rgba(255,107,53,0.06);
-  transform: translateX(4px);
-}
-.rga-pillar-icon {
-  width: 44px; height: 44px; min-width: 44px;
-  border-radius: 10px;
-  background: var(--accent-glow);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 13px; font-weight: 800; color: var(--accent);
-}
-.rga-pillar-title {
-  font-weight: 700; font-size: 15px;
-  color: var(--text-dark); margin-bottom: 4px;
-}
-.rga-pillar-desc { font-size: 13px; color: var(--text-light); line-height: 1.6; }
 
-.rga-vmg-stack { display: flex; flex-direction: column; gap: 16px; }
-.rga-vmg-card {
-  padding: 24px; border-radius: var(--radius);
-  border: 1px solid var(--border); background: #fff;
-  display: flex; gap: 16px; align-items: flex-start;
-  transition: var(--transition); position: relative; overflow: hidden;
+.about-intro {
+  text-align: center;
+  max-width: 950px;
+  margin: 0 auto 70px;
 }
-.rga-vmg-card::after {
-  content: ''; position: absolute; bottom: 0; left: 0;
-  width: 100%; height: 2px;
-  background: linear-gradient(90deg, var(--accent), var(--primary));
-  transform: scaleX(0); transform-origin: left; transition: transform 0.4s;
-}
-.rga-vmg-card:hover::after { transform: scaleX(1); }
-.rga-vmg-card:hover { transform: translateX(6px); }
-.rga-vmg-icon {
-  width: 48px; height: 48px; min-width: 48px; border-radius: 50%;
-  background: linear-gradient(135deg, var(--accent-glow), rgba(30,58,95,0.05));
-  border: 1px solid rgba(255,107,53,0.15);
-  display: flex; align-items: center; justify-content: center; font-size: 22px;
-}
-.rga-vmg-title {
-  font-weight: 700; font-size: 14px;
-  color: var(--accent); margin-bottom: 6px;
-  letter-spacing: 1px;
-}
-.rga-vmg-desc { font-size: 14px; color: var(--text); line-height: 1.6; }
 
+.section-tag {
+  display: inline-block;
+  color: #7dff8d;
+  font-size: 14px;
+  letter-spacing: 2px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.about-intro h2 {
+  font-size: 52px;
+  margin-bottom: 25px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.about-intro h2 span {
+  color: #7dff8d;
+}
+
+.main-about-text {
+  font-size: 18px;
+  line-height: 1.9;
+  color: #cfcfcf;
+}
+
+/* GRID */
+.about-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+  align-items: stretch;
+}
+
+/* CARDS */
+.about-card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  backdrop-filter: blur(14px);
+  border-radius: 24px;
+  padding: 40px 35px;
+  transition: 0.4s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-height: 320px;
+}
+
+.about-card:hover {
+  transform: translateY(-10px);
+  border-color: #7dff8d;
+  box-shadow: 0 20px 40px rgba(125,255,141,0.15);
+}
+
+.about-icon {
+  font-size: 42px;
+  margin-bottom: 25px;
+}
+
+.about-card h3 {
+  font-size: 24px;
+  margin-bottom: 18px;
+  font-weight: 600;
+}
+
+.about-card p {
+  color: #cfcfcf;
+  line-height: 1.8;
+  font-size: 16px;
+  flex-grow: 1;
+}
+
+/* MOBILE */
+@media(max-width:768px){
+
+  .about-section {
+    padding: 90px 6%;
+  }
+
+  .about-intro h2 {
+    font-size: 38px;
+  }
+
+  .main-about-text {
+    font-size: 16px;
+  }
+
+  .about-card {
+    min-height: auto;
+  }
+
+}
+  .about-intro,
+.about-card {
+  opacity: 0;
+  transform: translateY(60px);
+  animation: riseUp 1s ease forwards;
+}
+
+.about-intro {
+  animation-delay: 0.2s;
+}
+
+.about-card:nth-child(1) {
+  animation-delay: 0.4s;
+}
+
+.about-card:nth-child(2) {
+  animation-delay: 0.6s;
+}
+
+.about-card:nth-child(3) {
+  animation-delay: 0.8s;
+}
+
+@keyframes riseUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 /* ─── Brands ─── */
 .rga-brands-grid {
   max-width: 1200px; margin: 0 auto;
@@ -1093,47 +1159,50 @@ export default function RiselGrowthAgency() {
       </section>
 
       {/* ── ABOUT ── */}
-      <section id="about" className="rga-section" style={{ background: 'var(--bg-section)' }}>
-        <div className="rga-about-inner">
-          <div>
-            <div className="rga-eyebrow" style={{ justifyContent: 'flex-start' }}>About Us</div>
-            <h2 className="rga-about-heading rga-reveal">
-              About <span>Risel Growth</span> Agency
+      {/* ABOUT SECTION */}
+      <section className="about-section" id="about">
+        <div className="container">
+
+          {/* Main About Intro */}
+          <div className="about-intro">
+            <span className="section-tag">ABOUT US</span>
+
+            <h2>
+              About <span>Risel Growth Agency</span>
             </h2>
-            <p className="rga-about-body rga-reveal">
+
+            <p className="main-about-text">
               Risel Growth Agency is a full-service social media growth and marketing agency with over 4 years of proven experience across all major platforms. We've successfully worked with both individuals and major brands, helping them build a strong digital presence, increase engagement, and drive real results. Our expertise spans organic growth, content creation, social media consultancy, TikTok Shop management, and cutting-edge AI automation.
             </p>
-            <div className="rga-pillars">
-              {[
-                { code: 'ORG', title: 'Organic Growth Expertise', desc: 'Authentic audiences, measurable growth, and sustainable impact for businesses worldwide.' },
-                { code: 'AI', title: 'AI-Powered Automation', desc: 'Cutting-edge AI tools that automate DMs, bookings, and lead qualification 24/7.' },
-                { code: 'DATA', title: 'Data-Driven Strategies', desc: 'Creative execution backed by analytics for long-term success on every platform.' },
-              ].map(({ code, title, desc }, i) => (
-                <div key={i} className={`rga-pillar rga-reveal${i > 0 ? ` rga-reveal-d${i}` : ''}`}>
-                  <div className="rga-pillar-icon">{code}</div>
-                  <div>
-                    <div className="rga-pillar-title">{title}</div>
-                    <div className="rga-pillar-desc">{desc}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
           </div>
 
-          <div className="rga-vmg-stack">
-            {[
-              { icon: '👁️', title: 'VISION', desc: 'To help brands and individuals achieve real, authentic growth on social media — building communities, not just numbers.' },
-              { icon: '🎯', title: 'MISSION', desc: 'Deliver creative, results-driven strategies that boost engagement, visibility, and conversions for every client we serve.' },
-              { icon: '📋', title: 'LONG-TERM PLAN', desc: 'To lead the industry in social media growth and AI automation, delivering real results and lasting success for our partners.' },
-            ].map(({ icon, title, desc }, i) => (
-              <div key={i} className={`rga-vmg-card rga-reveal${i > 0 ? ` rga-reveal-d${i}` : ''}`}>
-                <div className="rga-vmg-icon">{icon}</div>
-                <div>
-                  <div className="rga-vmg-title">{title}</div>
-                  <div className="rga-vmg-desc">{desc}</div>
-                </div>
-              </div>
-            ))}
+          {/* About Cards */}
+          <div className="about-grid">
+
+            <div className="about-card">
+              <div className="about-icon">📈</div>
+              <h3>Organic Growth</h3>
+              <p>
+                We help brands grow naturally with real engagement, targeted strategies, and consistent audience development across Instagram and TikTok.
+              </p>
+            </div>
+
+            <div className="about-card">
+              <div className="about-icon">🤖</div>
+              <h3>AI Automation</h3>
+              <p>
+                Our AI systems automate DMs, lead qualification, WhatsApp bookings, and customer responses to increase conversions 24/7.
+              </p>
+            </div>
+
+            <div className="about-card">
+              <div className="about-icon">🎨</div>
+              <h3>Content Creation</h3>
+              <p>
+                We craft premium social media content designed to elevate your brand identity, boost engagement, and attract loyal audiences.
+              </p>
+            </div>
+
           </div>
         </div>
       </section>
