@@ -797,6 +797,23 @@ body {
     overflow: hidden;
   }
 
+  @keyframes scrollLeft {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(-50% - (8px * 2)));
+  }
+}
+
+@keyframes scrollRight {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(50% + (8px * 2)));
+  }
+}
 }
 
 /* ─── RESPONSIVE: Small phones ─── */
