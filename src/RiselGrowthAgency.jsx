@@ -797,58 +797,6 @@ body {
     overflow: hidden;
   }
 
- /* ─── Infinite Logo Slider ─── */
-
-.rga-marquee {
-  overflow: hidden;
-  width: 100%;
-  position: relative;
-}
-
-.rga-marquee-track {
-  display: flex;
-  width: fit-content;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
-
-  /* iOS Safari fix */
-  will-change: transform;
-  transform: translate3d(0,0,0);
-  backface-visibility: hidden;
-}
-
-.rga-marquee-left {
-  animation-name: marqueeLeft;
-  animation-duration: 28s;
-}
-
-.rga-marquee-right {
-  animation-name: marqueeRight;
-  animation-duration: 28s;
-}
-
-.rga-marquee:hover .rga-marquee-track {
-  animation-play-state: paused;
-}
-
-@keyframes marqueeLeft {
-  from {
-    transform: translate3d(0,0,0);
-  }
-  to {
-    transform: translate3d(-50%,0,0);
-  }
-}
-
-@keyframes marqueeRight {
-  from {
-    transform: translate3d(-50%,0,0);
-  }
-  to {
-    transform: translate3d(0,0,0);
-  }
-}
-
 /* ─── RESPONSIVE: Small phones ─── */
 @media (max-width: 380px) {
   .rga-hero-title { font-size: 28px; }
@@ -1316,11 +1264,12 @@ export default function RiselGrowthAgency() {
             background: 'linear-gradient(to right, #ffffff, transparent)',
             zIndex: 2, pointerEvents: 'none'
           }} />
-          <div className="rga-marquee">
-            <div className="rga-marquee-track rga-marquee-left">
-            </div>
-
-            {[...logos.slice().reverse(), ...logos, ...logos].map((logo, i) => (
+          <div style={{
+            display: 'flex',
+            animation: 'scrollLeft 18s linear infinite',
+            width: 'max-content',
+          }}>
+            {[...logos, ...logos, ...logos, ...logos].map((logo, i) => (
               <div
                 key={i}
                 style={{
@@ -1370,10 +1319,12 @@ export default function RiselGrowthAgency() {
             background: 'linear-gradient(to left, #ffffff, transparent)',
             zIndex: 2, pointerEvents: 'none'
           }} />
-          <div className="rga-marquee">
-            <div className="rga-marquee-track rga-marquee-right">
-            </div>
-            {[...logos.slice().reverse(), ...logos, ...logos].map((logo, i) => (
+          <div style={{
+            display: 'flex',
+            animation: 'scrollRight 18s linear infinite',
+            width: 'max-content',
+          }}>
+            {[...logos.reverse(), ...logos, ...logos, ...logos].map((logo, i) => (
               <div
                 key={i}
                 style={{
