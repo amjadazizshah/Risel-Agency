@@ -317,7 +317,7 @@ body {
 /* ─── Section commons ─── */
 .rga-section {
   position: relative; z-index: 10;
-  padding: 100px 40px;
+  padding: 70px 40px;
 }
 .rga-section-header {
   text-align: center; margin-bottom: 64px; max-width: 600px;
@@ -760,6 +760,7 @@ body {
 
 /* ─── RESPONSIVE: Mobile ─── */
 @media (max-width: 640px) {
+
   .rga-nav { padding: 0 16px; height: 64px; }
   .rga-hero { padding: 90px 16px 48px; min-height: auto; }
   .rga-hero-title { font-size: clamp(30px, 8vw, 42px); }
@@ -791,11 +792,17 @@ body {
   .rga-social-btns { flex-direction: column; align-items: stretch; }
   .rga-social-btn { justify-content: center; }
 
-  .rga-footer { padding: 24px 16px; flex-direction: column; gap: 8px; text-align: center; }
+  .rga-footer {
+    padding: 24px 16px;
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+  }
 
   .rga-section {
     overflow: hidden;
   }
+}
 
 /* ─── RESPONSIVE: Small phones ─── */
 @media (max-width: 380px) {
@@ -1127,14 +1134,21 @@ export default function RiselGrowthAgency() {
         <div className="rga-services-grid">
           {[
             {
-              icon: <InstagramIcon />, name: 'Instagram Growth', sub: 'Organic Strategy',
-              desc: 'Grow your Instagram organically with real followers who genuinely engage. Increase reach, visibility, and brand trust with proven strategies — no bots, just consistent, long-term results.',
+              icon: <InstagramIcon />, name: 'Instagram Growth and DM Services', sub: 'Organic Strategy',
+              desc: 'Grow your Instagram organically with real followers who genuinely engage. Increase reach, visibility, and brand trust with proven strategies — plus automated DM systems that instantly respond to leads, nurture prospects, and convert followers into paying clients.',
               ci: 0
             },
             {
               icon: <TikTokIcon />, name: 'TikTok Growth', sub: 'Organic Strategy',
               desc: 'Grow your TikTok organically with real followers who engage. Boost views, reach, and visibility using proven growth strategies designed for sustainable, authentic results.',
               ci: 1
+            },
+            {
+              icon: <GrowIcon />,
+              name: 'Organic Social Media Growth',
+              sub: 'Multi-Platform Strategy',
+              desc: 'Comprehensive organic growth strategies across Instagram, TikTok, Facebook, and other platforms. We help brands build authentic communities, increase engagement, and scale sustainably without relying on paid ads.',
+              ci: 3
             },
             {
               icon: <ContentIcon />, name: 'Content Creation', sub: 'Social Media',
@@ -1159,38 +1173,6 @@ export default function RiselGrowthAgency() {
           ))}
         </div>
 
-        <div className="rga-ai-divider rga-reveal">AI-POWERED AUTOMATION</div>
-
-        <div className="rga-services-grid">
-          {[
-            {
-              icon: <DMIcon />, name: 'Insta DM Automation', sub: 'Auto-Reply 24/7',
-              desc: 'AI-powered Instagram DM automation that responds to leads instantly, 24/7. Auto-qualify prospects, answer FAQs, send offers, and book calls — all on autopilot.',
-              ci: 3
-            },
-            {
-              icon: <WhatsAppIcon />, name: 'WhatsApp Booking AI', sub: 'Sales Chat Bot',
-              desc: 'WhatsApp AI sales agent that chats with prospects, handles objections, presents packages, and books appointments automatically. Your 24/7 sales rep that never sleeps.',
-              ci: 3
-            },
-            {
-              icon: <LeadIcon />, name: 'Lead Qualification', sub: 'AI Sales System',
-              desc: 'Intelligent AI lead qualification system that filters, scores, and prioritizes your hottest prospects automatically. Only serious buyers reach your calendar — maximizing conversions.',
-              ci: 3
-            },
-          ].map(({ icon, name, sub, desc, ci }, i) => (
-            <div key={i} className={`rga-service-card rga-reveal${i > 0 ? ` rga-reveal-d${i}` : ''}`}
-              style={{ '--card-accent': '#10b981' }}>
-              <div className="rga-ai-tag">AI Powered</div>
-              <div className="rga-service-icon" style={{ background: 'var(--green-bg)', color: 'var(--green)' }}>
-                {icon}
-              </div>
-              <div className="rga-service-name">{name}</div>
-              <div className="rga-service-sub" style={{ color: 'var(--green)' }}>{sub}</div>
-              <p className="rga-service-desc">{desc}</p>
-            </div>
-          ))}
-        </div>
       </section>
 
       {/* ABOUT SECTION */}
@@ -1222,14 +1204,6 @@ export default function RiselGrowthAgency() {
             </div>
 
             <div className="about-card">
-              <div className="about-icon">🤖</div>
-              <h3>AI Automation</h3>
-              <p>
-                Our AI systems automate DMs, lead qualification, WhatsApp bookings, and customer responses to increase conversions 24/7.
-              </p>
-            </div>
-
-            <div className="about-card">
               <div className="about-icon">🎨</div>
               <h3>Content Creation</h3>
               <p>
@@ -1251,7 +1225,7 @@ export default function RiselGrowthAgency() {
         {/* Row 1 */}
         <div style={{ overflow: 'hidden', position: 'relative', marginBottom: '24px' }}>
           <div style={{
-            position: 'absolute', leftt: 0, top: 0,
+            position: 'absolute', left: 0, top: 0,
             width: 'clamp(40px, 8vw, 150px)',
             height: '100%',
             background: 'linear-gradient(right, #ffffff, transparent)',
@@ -1324,7 +1298,7 @@ export default function RiselGrowthAgency() {
             animation: 'scrollRight 18s linear infinite',
             width: 'max-content',
           }}>
-            {[...logos.reverse(), ...logos, ...logos, ...logos].map((logo, i) => (
+            {[...[...logos].reverse(), ...logos, ...logos, ...logos].map((logo, i) => (
               <div
                 key={i}
                 style={{
