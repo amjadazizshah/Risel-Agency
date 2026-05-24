@@ -1248,13 +1248,17 @@ export default function RiselGrowthAgency() {
         {/* Row 1 */}
         <div style={{ overflow: 'hidden', position: 'relative', marginBottom: '24px' }}>
           <div style={{
-            position: 'absolute', left: 0, top: 0, width: '150px', height: '100%',
-            background: 'linear-gradient(to right, #ffffff, transparent)',
+            position: 'absolute', leftt: 0, top: 0,
+            width: 'clamp(40px, 8vw, 150px)',
+            height: '100%',
+            background: 'linear-gradient(right, #ffffff, transparent)',
             zIndex: 2, pointerEvents: 'none'
           }} />
           <div style={{
-            position: 'absolute', right: 0, top: 0, width: '150px', height: '100%',
-            background: 'linear-gradient(to left, #ffffff, transparent)',
+            position: 'absolute', left: 0, top: 0,
+            width: 'clamp(40px, 8vw, 150px)',
+            height: '100%',
+            background: 'linear-gradient(to right, #ffffff, transparent)',
             zIndex: 2, pointerEvents: 'none'
           }} />
           <div style={{
@@ -1294,12 +1298,16 @@ export default function RiselGrowthAgency() {
         {/* Row 2 — moves right (opposite direction) */}
         <div style={{ overflow: 'hidden', position: 'relative' }}>
           <div style={{
-            position: 'absolute', left: 0, top: 0, width: '150px', height: '100%',
-            background: 'linear-gradient(to right, #ffffff, transparent)',
+            position: 'absolute', right: 0, top: 0,
+            width: 'clamp(40px, 8vw, 150px)',
+            height: '100%',
+            background: 'linear-gradient(to left, #ffffff, transparent)',
             zIndex: 2, pointerEvents: 'none'
           }} />
           <div style={{
-            position: 'absolute', right: 0, top: 0, width: '150px', height: '100%',
+            position: 'absolute', right: 0, top: 0,
+            width: 'clamp(40px, 8vw, 150px)',
+            height: '100%',
             background: 'linear-gradient(to left, #ffffff, transparent)',
             zIndex: 2, pointerEvents: 'none'
           }} />
