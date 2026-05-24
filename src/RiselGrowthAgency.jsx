@@ -792,6 +792,28 @@ body {
   .rga-social-btn { justify-content: center; }
 
   .rga-footer { padding: 24px 16px; flex-direction: column; gap: 8px; text-align: center; }
+
+  .rga-section {
+    overflow: hidden;
+  }
+
+  @keyframes scrollLeft {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(-50% - (8px * 2)));
+  }
+}
+
+@keyframes scrollRight {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(50% + (8px * 2)));
+  }
+}
 }
 
 /* ─── RESPONSIVE: Small phones ─── */
@@ -1263,7 +1285,7 @@ export default function RiselGrowthAgency() {
           }} />
           <div style={{
             display: 'flex',
-            animation: 'scrollLeft 25s linear infinite',
+            animation: 'scrollLeft 18s linear infinite',
             width: 'max-content',
           }}>
             {[...logos, ...logos, ...logos, ...logos].map((logo, i) => (
@@ -1289,7 +1311,12 @@ export default function RiselGrowthAgency() {
                 <img
                   src={logo.src}
                   alt={`brand-${i}`}
-                  style={{ height: logo.h, width: 'auto', maxWidth: '140px', objectFit: 'contain' }}
+                  style={{
+                    height: `clamp(24px, 4vw, ${logo.h})`,
+                    width: 'auto',
+                    maxWidth: 'clamp(80px, 15vw, 140px)',
+                    objectFit: 'contain'
+                  }}
                 />
               </div>
             ))}
@@ -1313,14 +1340,14 @@ export default function RiselGrowthAgency() {
           }} />
           <div style={{
             display: 'flex',
-            animation: 'scrollRight 25s linear infinite',
+            animation: 'scrollRight 18s linear infinite',
             width: 'max-content',
           }}>
             {[...logos.reverse(), ...logos, ...logos, ...logos].map((logo, i) => (
               <div
                 key={i}
                 style={{
-                  padding: '20px 36px',
+                  padding: '14px 20px',
                   background: '#fff',
                   borderRadius: '14px',
                   border: '1px solid #e8e4df',
@@ -1330,7 +1357,7 @@ export default function RiselGrowthAgency() {
                   justifyContent: 'center',
                   flexShrink: 0,
                   cursor: 'pointer',
-                  margin: '0 12px',
+                  margin: '0 8px',
                   transition: 'transform 0.3s',
                 }}
                 onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-6px) scale(1.05)'}
@@ -1339,7 +1366,12 @@ export default function RiselGrowthAgency() {
                 <img
                   src={logo.src}
                   alt={`brand-${i}`}
-                  style={{ height: logo.h, width: 'auto', maxWidth: '140px', objectFit: 'contain' }}
+                  style={{
+                    height: `clamp(24px, 4vw, ${logo.h})`,
+                    width: 'auto',
+                    maxWidth: 'clamp(80px, 15vw, 140px)',
+                    objectFit: 'contain'
+                  }}
                 />
               </div>
             ))}
