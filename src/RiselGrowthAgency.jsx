@@ -1357,6 +1357,21 @@ export default function RiselGrowthAgency() {
               name: 'Margaux', company: 'Magnifiscience',
               logo: magnifiscienceLogo, logoPad: '5px'
             },
+            {
+              text: 'Risel Digital Agency demonstrated strong expertise in social media marketing while working on KFC Pakistan–related campaigns. His strategic content planning and audience-focused approach helped increase engagement and improve overall brand visibility. He understands how to align global brand standards with local market trends.',
+              name: 'Noor', company: 'KFC',
+              logo: kfcLogo, logoPad: '6px'
+            },
+            {
+              text: 'Risel Digital Agency provided high-quality social media marketing support with a strong focus on brand consistency and engagement. His strategic approach helped improve visibility, audience interaction, and overall performance across platforms. A dedicated professional who understands how to grow brands digitally.',
+              name: 'Ankit Jaitly', company: '365Digital',
+              logo: logo365, logoPad: '8px'
+            },
+            {
+              text: 'Working with Risel Digital Agency was a smooth and productive experience. He managed social media activities professionally, focusing on consistency, engagement, and performance. His insights into audience behavior and content optimization contributed to stronger reach and better interaction across platforms.',
+              name: 'Michael', company: 'Ean Elliot',
+              logo: eanElliotLogo, logoPad: '8px'
+            },
           ].map(({ text, name, company, logo, logoPad }, i) => (
             <div key={i} className={`rga-testi-card rga-reveal${i > 0 ? ` rga-reveal-d${i}` : ''}`}>
               <div className="rga-testi-stars">★★★★★</div>
