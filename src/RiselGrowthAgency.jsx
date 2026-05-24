@@ -5,7 +5,7 @@ import magnifiscienceLogo from './assets/Magnifiscience.png';
 import eanElliotLogo from './assets/EanElliot.png';
 import logo365 from './assets/365Digital.png';
 import kfcLogo from './assets/KFC.png';
-import { motion } from "framer-motion";
+import riselLogo from './assets/risellogo.png';
 
 // ─── CSS ────────────────────────────────────────────────────────────────────
 const STYLES = `
@@ -561,6 +561,15 @@ body {
   color: var(--accent); transform: translateY(-3px);
 }
 .rga-brand-badge svg { color: var(--accent); }
+@keyframes scrollLeft {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes scrollRight {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
 
 /* ─── Testimonials ─── */
 .rga-testi-grid {
@@ -590,12 +599,16 @@ body {
 }
 .rga-testi-author { display: flex; align-items: center; gap: 12px; }
 .rga-testi-avatar {
-  width: 44px; height: 44px; border-radius: 50%;
-  background: linear-gradient(135deg, var(--accent-glow), rgba(30,58,95,0.08));
-  border: 2px solid rgba(255,107,53,0.15);
-  display: flex; align-items: center; justify-content: center;
-  font-family: 'DM Serif Display', serif;
-  font-size: 16px; color: var(--accent);
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 2px solid #e8e4df;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
 }
 .rga-testi-name { font-weight: 700; font-size: 14px; color: var(--text-dark); }
 .rga-testi-company { font-size: 12px; color: var(--accent); font-weight: 500; margin-top: 2px; }
@@ -958,6 +971,7 @@ export default function RiselGrowthAgency() {
     return () => { document.body.style.overflow = ''; };
   }, [menuOpen]);
 
+
   const navItems = ['services', 'about', 'reviews', 'contact'];
   const serviceColors = [
     { bg: 'rgba(255,107,53,0.08)', color: '#ff6b35' },
@@ -965,13 +979,31 @@ export default function RiselGrowthAgency() {
     { bg: 'rgba(245,158,11,0.08)', color: '#f59e0b' },
     { bg: 'rgba(16,185,129,0.08)', color: '#10b981' },
   ];
-
+  const logos = [
+    { src: fleurLogo, h: '50px' },
+    { src: adopterzLogo, h: '40px' },
+    { src: magnifiscienceLogo, h: '28px' },
+    { src: eanElliotLogo, h: '50px' },
+    { src: logo365, h: '44px' },
+    { src: kfcLogo, h: '60px' },
+  ];
   return (
     <>
       {/* ── NAV ── */}
       <nav className={`rga-nav${navScrolled ? ' scrolled' : ''}`}>
         <a href="#home" className="rga-logo" onClick={e => { e.preventDefault(); scrollTo('home'); }}>
-          <div className="rga-logo-mark">R</div>
+          <img
+            src={riselLogo}
+            alt="Risel Growth Agency"
+            style={{
+              width: '48px',
+              height: '48px',
+              borderRadius: '12px',
+              objectFit: 'cover',
+              background: '#000',
+              padding: '0px',
+            }}
+          />
           <div>
             <div className="rga-logo-text">Risel Growth</div>
             <div className="rga-logo-sub">Digital Agency</div>
@@ -1158,7 +1190,6 @@ export default function RiselGrowthAgency() {
         </div>
       </section>
 
-      {/* ── ABOUT ── */}
       {/* ABOUT SECTION */}
       <section className="about-section" id="about">
         <div className="container">
@@ -1214,109 +1245,97 @@ export default function RiselGrowthAgency() {
           <h2 className="rga-section-title">Brands That <span>Trust Us</span></h2>
           <p className="rga-section-desc">Empowering brands with strategies that elevate their success.</p>
         </div>
-
-        {/* Row 1 — moves left */}
+        {/* Row 1 */}
         <div style={{ overflow: 'hidden', position: 'relative', marginBottom: '24px' }}>
-
-          {/* Fade left edge */}
           <div style={{
             position: 'absolute', left: 0, top: 0, width: '150px', height: '100%',
             background: 'linear-gradient(to right, #ffffff, transparent)',
             zIndex: 2, pointerEvents: 'none'
           }} />
-
-          {/* Fade right edge */}
           <div style={{
             position: 'absolute', right: 0, top: 0, width: '150px', height: '100%',
             background: 'linear-gradient(to left, #ffffff, transparent)',
             zIndex: 2, pointerEvents: 'none'
           }} />
-
-          <motion.div
-            style={{ display: 'flex', gap: '24px', width: 'max-content' }}
-            animate={{ x: ['0%', '-50%'] }}
-            transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-          >
-            {[...Array(2)].map((_, repeat) => (
-              [fleurLogo, adopterzLogo, magnifiscienceLogo, eanElliotLogo, logo365, kfcLogo]
-                .map((logo, i) => (
-                  <motion.div
-                    key={`${repeat}-${i}`}
-                    whileHover={{ y: -6, scale: 1.05 }}
-                    style={{
-                      padding: '20px 36px',
-                      background: '#fff',
-                      borderRadius: '14px',
-                      border: '1px solid #e8e4df',
-                      boxShadow: '0 4px 20px rgba(0,0,0,0.05)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      flexShrink: 0,
-                      cursor: 'pointer',
-                    }}
-                  >
-                    <img
-                      src={logo}
-                      alt={`brand-${i}`}
-                      style={{ height: '44px', width: 'auto', maxWidth: '130px', objectFit: 'contain' }}
-                    />
-                  </motion.div>
-                ))
+          <div style={{
+            display: 'flex',
+            animation: 'scrollLeft 25s linear infinite',
+            width: 'max-content',
+          }}>
+            {[...logos, ...logos, ...logos, ...logos].map((logo, i) => (
+              <div
+                key={i}
+                style={{
+                  padding: '20px 36px',
+                  background: '#fff',
+                  borderRadius: '14px',
+                  border: '1px solid #e8e4df',
+                  boxShadow: '0 4px 20px rgba(0,0,0,0.05)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0,
+                  cursor: 'pointer',
+                  margin: '0 12px',
+                  transition: 'transform 0.3s',
+                }}
+                onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-6px) scale(1.05)'}
+                onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0) scale(1)'}
+              >
+                <img
+                  src={logo.src}
+                  alt={`brand-${i}`}
+                  style={{ height: logo.h, width: 'auto', maxWidth: '140px', objectFit: 'contain' }}
+                />
+              </div>
             ))}
-          </motion.div>
+          </div>
         </div>
-
         {/* Row 2 — moves right (opposite direction) */}
         <div style={{ overflow: 'hidden', position: 'relative' }}>
-
-          {/* Fade left edge */}
           <div style={{
             position: 'absolute', left: 0, top: 0, width: '150px', height: '100%',
             background: 'linear-gradient(to right, #ffffff, transparent)',
             zIndex: 2, pointerEvents: 'none'
           }} />
-
-          {/* Fade right edge */}
           <div style={{
             position: 'absolute', right: 0, top: 0, width: '150px', height: '100%',
             background: 'linear-gradient(to left, #ffffff, transparent)',
             zIndex: 2, pointerEvents: 'none'
           }} />
-
-          <motion.div
-            style={{ display: 'flex', gap: '24px', width: 'max-content' }}
-            animate={{ x: ['-50%', '0%'] }}
-            transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-          >
-            {[...Array(2)].map((_, repeat) => (
-              [kfcLogo, logo365, eanElliotLogo, magnifiscienceLogo, adopterzLogo, fleurLogo]
-                .map((logo, i) => (
-                  <motion.div
-                    key={`${repeat}-${i}`}
-                    whileHover={{ y: -6, scale: 1.05 }}
-                    style={{
-                      padding: '20px 36px',
-                      background: '#fff',
-                      borderRadius: '14px',
-                      border: '1px solid #e8e4df',
-                      boxShadow: '0 4px 20px rgba(0,0,0,0.05)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      flexShrink: 0,
-                      cursor: 'pointer',
-                    }}
-                  >
-                    <img
-                      src={logo}
-                      alt={`brand-${i}`}
-                      style={{ height: '44px', width: 'auto', maxWidth: '130px', objectFit: 'contain' }}
-                    />
-                  </motion.div>
-                ))
+          <div style={{
+            display: 'flex',
+            animation: 'scrollRight 25s linear infinite',
+            width: 'max-content',
+          }}>
+            {[...logos.reverse(), ...logos, ...logos, ...logos].map((logo, i) => (
+              <div
+                key={i}
+                style={{
+                  padding: '20px 36px',
+                  background: '#fff',
+                  borderRadius: '14px',
+                  border: '1px solid #e8e4df',
+                  boxShadow: '0 4px 20px rgba(0,0,0,0.05)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0,
+                  cursor: 'pointer',
+                  margin: '0 12px',
+                  transition: 'transform 0.3s',
+                }}
+                onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-6px) scale(1.05)'}
+                onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0) scale(1)'}
+              >
+                <img
+                  src={logo.src}
+                  alt={`brand-${i}`}
+                  style={{ height: logo.h, width: 'auto', maxWidth: '140px', objectFit: 'contain' }}
+                />
+              </div>
             ))}
-          </motion.div>
+          </div>
         </div>
       </section>
       {/* ── TESTIMONIALS ── */}
@@ -1330,22 +1349,36 @@ export default function RiselGrowthAgency() {
           {[
             {
               text: 'Working with Risel Growth Agency was a great experience. They managed our social media with a clear strategy, consistent content planning, and strong audience targeting. We saw noticeable improvement in engagement, reach, and brand visibility.',
-              name: 'Mehdi', company: 'Fleur & Compagnie', initial: 'M'
+              name: 'Mehdi', company: 'Fleur & Compagnie',
+              logo: fleurLogo, logoPad: '8px'
             },
             {
               text: 'Risel Growth Agency delivered excellent social media marketing services for our brand. From content strategy to audience engagement, everything was handled professionally. Our follower growth and interaction rate improved steadily.',
-              name: 'Tony', company: 'Adopterz', initial: 'T'
+              name: 'Tony', company: 'Adopterz',
+              logo: adopterzLogo, logoPad: '3px'
             },
             {
-              text: 'Risel Growth Agency played a key role in enhancing our online presence. Their social media strategies helped us reach the right audience and build trust with our community. The content planning made a real difference in brand growth.',
-              name: 'Margaux', company: 'Magnifiscience', initial: 'M'
+              text: 'Risel Growth Agency played a key role in enhancing our online presence. Their strategies helped us reach the right audience and build trust with our community. The content planning made a real difference in brand growth.',
+              name: 'Margaux', company: 'Magnifiscience',
+              logo: magnifiscienceLogo, logoPad: '5px'
             },
-          ].map(({ text, name, company, initial }, i) => (
+          ].map(({ text, name, company, logo, logoPad }, i) => (
             <div key={i} className={`rga-testi-card rga-reveal${i > 0 ? ` rga-reveal-d${i}` : ''}`}>
               <div className="rga-testi-stars">★★★★★</div>
               <p className="rga-testi-text">"{text}"</p>
               <div className="rga-testi-author">
-                <div className="rga-testi-avatar">{initial}</div>
+                <div className="rga-testi-avatar">
+                  <img
+                    src={logo}
+                    alt={company}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'contain',
+                      padding: logoPad,
+                    }}
+                  />
+                </div>
                 <div>
                   <div className="rga-testi-name">{name}</div>
                   <div className="rga-testi-company">{company}</div>
