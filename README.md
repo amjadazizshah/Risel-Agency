@@ -164,8 +164,8 @@ Auto Deploy:       Enabled on every git push
 Software Engineer — React Native · React · Django
 
 [![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/amjadazizshah)
-[![WhatsApp](https://img.shields.io/badge/Hire%20Me-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://wa.me/923358169111)
-[![Email](https://img.shields.io/badge/Email-EA4335?style=for-the-badge&logo=gmail&logoColor=white)](mailto:riselgrowthagency@gmail.com)
+[![WhatsApp](https://img.shields.io/badge/Hire%20Me-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://wa.me/923295015604)
+[![Email](https://img.shields.io/badge/Email-EA4335?style=for-the-badge&logo=gmail&logoColor=white)](mailto:amjadshahg26@gmail.com)
 
 ---
 
