@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import emailjs from '@emailjs/browser';
 import fleurLogo from './assets/Fleur.png';
 import adopterzLogo from './assets/Adopterz.png';
 import magnifiscienceLogo from './assets/Magnifiscience.png';
@@ -342,6 +343,250 @@ body {
 }
 .rga-section-desc {
   font-size: 16px; color: var(--text-light); line-height: 1.7;
+}
+
+/* ─── Web Development Section ─── */
+.rga-webdev-section {
+  background: linear-gradient(160deg, #0d1b2a 0%, #1e3a5f 50%, #0d2440 100%);
+  padding: 100px 40px;
+  position: relative;
+  overflow: hidden;
+  z-index: 10;
+}
+.rga-webdev-section::before {
+  content: '';
+  position: absolute;
+  top: -200px; right: -200px;
+  width: 600px; height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,107,53,0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+.rga-webdev-section::after {
+  content: '';
+  position: absolute;
+  bottom: -150px; left: -150px;
+  width: 500px; height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(99,102,241,0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+.rga-webdev-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+.rga-webdev-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  color: #ff6b35;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+.rga-webdev-label::before, .rga-webdev-label::after {
+  content: '';
+  width: 20px; height: 1.5px;
+  background: #ff6b35;
+  border-radius: 1px;
+}
+.rga-webdev-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(32px, 4.5vw, 52px);
+  color: #ffffff;
+  line-height: 1.15;
+  margin-bottom: 20px;
+}
+.rga-webdev-title span {
+  background: linear-gradient(135deg, #ff6b35, #ff9a6c);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.rga-webdev-desc {
+  font-size: 16px;
+  color: rgba(255,255,255,0.65);
+  line-height: 1.8;
+  margin-bottom: 36px;
+}
+.rga-webdev-features {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 36px;
+}
+.rga-webdev-feature {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  transition: 0.3s ease;
+}
+.rga-webdev-feature:hover {
+  background: rgba(255,107,53,0.08);
+  border-color: rgba(255,107,53,0.2);
+  transform: translateY(-3px);
+}
+.rga-webdev-feature-icon {
+  font-size: 22px;
+  flex-shrink: 0;
+  line-height: 1;
+}
+.rga-webdev-feature-text strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 3px;
+}
+.rga-webdev-feature-text span {
+  font-size: 12px;
+  color: rgba(255,255,255,0.5);
+  line-height: 1.5;
+}
+.rga-webdev-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 32px;
+  border-radius: 50px;
+  background: linear-gradient(135deg, #ff6b35, #e85d2c);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s ease;
+  box-shadow: 0 4px 20px rgba(255,107,53,0.35);
+}
+.rga-webdev-cta:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 32px rgba(255,107,53,0.45);
+}
+.rga-webdev-visual {
+  position: relative;
+}
+.rga-webdev-mockup {
+  background: #111827;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.1);
+  overflow: hidden;
+  box-shadow: 0 40px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05);
+}
+.rga-webdev-mockup-bar {
+  background: #1f2937;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.rga-webdev-mockup-dots {
+  display: flex;
+  gap: 6px;
+}
+.rga-webdev-mockup-dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+}
+.rga-webdev-mockup-url {
+  flex: 1;
+  background: rgba(255,255,255,0.06);
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.4);
+  font-family: monospace;
+}
+.rga-webdev-mockup-body {
+  padding: 24px;
+}
+.rga-webdev-mockup-hero {
+  background: linear-gradient(135deg, #1e3a5f 0%, #ff6b35 100%);
+  border-radius: 12px;
+  height: 140px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+}
+.rga-webdev-mockup-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.rga-webdev-mockup-line {
+  border-radius: 6px;
+  background: rgba(255,255,255,0.07);
+  height: 10px;
+}
+.rga-webdev-mockup-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.rga-webdev-mockup-card {
+  background: rgba(255,107,53,0.12);
+  border: 1px solid rgba(255,107,53,0.2);
+  border-radius: 10px;
+  height: 60px;
+}
+.rga-webdev-tech-badges {
+  position: absolute;
+  bottom: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  background: #0d1b2a;
+  padding: 12px 20px;
+  border-radius: 50px;
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  white-space: nowrap;
+}
+.rga-webdev-tech-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 50px;
+  letter-spacing: 0.5px;
+}
+@media (max-width: 1024px) {
+  .rga-webdev-inner {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+  .rga-webdev-section {
+    padding: 80px 24px;
+  }
+}
+@media (max-width: 640px) {
+  .rga-webdev-section {
+    padding: 60px 16px;
+  }
+  .rga-webdev-features {
+    grid-template-columns: 1fr;
+  }
+  .rga-webdev-tech-badges {
+    flex-wrap: wrap;
+    justify-content: center;
+    bottom: -30px;
+  }
 }
 
 /* ─── Services ─── */
@@ -833,28 +1078,24 @@ const ContentIcon = () => (
     <path d="M8 21h8M12 17v4" />
   </svg>
 );
+const CameraIcon = () => (
+  <svg viewBox="0 0 24 24" style={{ width: 24, height: 24, stroke: 'currentColor', fill: 'none', strokeWidth: 1.5 }}>
+    <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z" />
+    <circle cx="12" cy="13" r="4" />
+  </svg>
+);
 const ConsultIcon = () => (
   <svg viewBox="0 0 24 24" style={{ width: 24, height: 24, stroke: 'currentColor', fill: 'none', strokeWidth: 1.5 }}>
     <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
   </svg>
 );
-const DMIcon = () => (
+const WebDevIcon = () => (
   <svg viewBox="0 0 24 24" style={{ width: 24, height: 24, stroke: 'currentColor', fill: 'none', strokeWidth: 1.5 }}>
-    <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+    <rect x="2" y="3" width="20" height="14" rx="2" />
+    <path d="M8 9l-3 3 3 3M16 9l3 3-3 3M14 7l-4 10" />
   </svg>
 );
-const WhatsAppIcon = () => (
-  <svg viewBox="0 0 24 24" style={{ width: 24, height: 24, stroke: 'currentColor', fill: 'none', strokeWidth: 1.5 }}>
-    <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z" />
-  </svg>
-);
-const LeadIcon = () => (
-  <svg viewBox="0 0 24 24" style={{ width: 24, height: 24, stroke: 'currentColor', fill: 'none', strokeWidth: 1.5 }}>
-    <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
-    <circle cx="9" cy="7" r="4" />
-    <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" />
-  </svg>
-);
+
 const RocketIcon = () => (
   <svg viewBox="0 0 24 24" style={{ width: '100%', height: '100%', stroke: '#fff', fill: 'none', strokeWidth: 1.5 }}>
     <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 00-2.91-.09z" />
@@ -872,29 +1113,6 @@ const GrowIcon = () => (
   </svg>
 );
 
-const CommunityIcon = () => (
-  <svg viewBox="0 0 24 24" style={{ width: 24, height: 24, stroke: 'currentColor', fill: 'none', strokeWidth: 1.5 }}>
-    <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
-    <circle cx="9" cy="7" r="4" />
-    <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" />
-  </svg>
-);
-
-const TargetIcon = () => (
-  <svg viewBox="0 0 24 24" style={{ width: 24, height: 24, stroke: 'currentColor', fill: 'none', strokeWidth: 1.5 }}>
-    <circle cx="12" cy="12" r="10" />
-    <circle cx="12" cy="12" r="6" />
-    <circle cx="12" cy="12" r="2" />
-  </svg>
-);
-
-const ClockIcon = () => (
-  <svg viewBox="0 0 24 24" style={{ width: 24, height: 24, stroke: 'currentColor', fill: 'none', strokeWidth: 1.5 }}>
-    <circle cx="12" cy="12" r="10" />
-    <polyline points="12 6 12 12 16 14" />
-  </svg>
-);
-
 // ─── Main Component ──────────────────────────────────────────────────────────
 export default function RiselGrowthAgency() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -903,6 +1121,12 @@ export default function RiselGrowthAgency() {
   const statsRef = useRef(null);
   const [form, setForm] = useState({ name: '', email: '', phone: '', message: '' });
   const [formMsg, setFormMsg] = useState(null);
+  const [isSending, setIsSending] = useState(false);
+
+  // ── EmailJS config ──────────────────────────────────────────────────────────
+  const EMAILJS_SERVICE_ID  = 'service_2cjtfgk';
+  const EMAILJS_TEMPLATE_ID = 'template_5jdgmdi';
+  const EMAILJS_PUBLIC_KEY  = 'gmwjYtXITk2_uswG8';
 
   // Inject styles
   useEffect(() => {
@@ -964,15 +1188,36 @@ export default function RiselGrowthAgency() {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.name || !form.email || !form.message) {
       setFormMsg({ type: 'error', text: 'Please fill in all required fields.' });
       return;
     }
-    setFormMsg({ type: 'success', text: 'Message sent successfully! We\'ll respond within 24 hours.' });
-    setForm({ name: '', email: '', phone: '', message: '' });
-    setTimeout(() => setFormMsg(null), 5000);
+    setIsSending(true);
+    setFormMsg(null);
+    try {
+      await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        {
+          from_name:    form.name,
+          from_email:   form.email,
+          phone:        form.phone || 'Not provided',
+          message:      form.message,
+          reply_to:     form.email,
+        },
+        EMAILJS_PUBLIC_KEY
+      );
+      setFormMsg({ type: 'success', text: "Message sent! We'll get back to you within 24 hours." });
+      setForm({ name: '', email: '', phone: '', message: '' });
+    } catch (err) {
+      console.error('EmailJS error:', err);
+      setFormMsg({ type: 'error', text: 'Failed to send message. Please try again or email us directly.' });
+    } finally {
+      setIsSending(false);
+      setTimeout(() => setFormMsg(null), 6000);
+    }
   };
 
   // Lock body scroll when mobile menu is open
@@ -982,12 +1227,14 @@ export default function RiselGrowthAgency() {
   }, [menuOpen]);
 
 
-  const navItems = ['services', 'about', 'reviews', 'contact'];
+  const navItems = ['services', 'webdev', 'about', 'reviews', 'contact'];
+  const navLabels = { services: 'Services', webdev: 'Web Dev', about: 'About', reviews: 'Reviews', contact: 'Contact' };
   const serviceColors = [
     { bg: 'rgba(255,107,53,0.08)', color: '#ff6b35' },
     { bg: 'rgba(30,58,95,0.08)', color: '#1e3a5f' },
     { bg: 'rgba(245,158,11,0.08)', color: '#f59e0b' },
     { bg: 'rgba(16,185,129,0.08)', color: '#10b981' },
+    { bg: 'rgba(99,102,241,0.08)', color: '#6366f1' },
   ];
   const logos = [
     { src: fleurLogo, h: '50px' },
@@ -1024,7 +1271,7 @@ export default function RiselGrowthAgency() {
           {navItems.map(id => (
             <li key={id}>
               <a href={`#${id}`} onClick={e => { e.preventDefault(); scrollTo(id); }}>
-                {id.charAt(0).toUpperCase() + id.slice(1)}
+                {navLabels[id] || id.charAt(0).toUpperCase() + id.slice(1)}
               </a>
             </li>
           ))}
@@ -1047,7 +1294,7 @@ export default function RiselGrowthAgency() {
       <div className={`rga-mobile-overlay${menuOpen ? ' open' : ''}`}>
         {navItems.map(id => (
           <a key={id} href={`#${id}`} onClick={e => { e.preventDefault(); scrollTo(id); }}>
-            {id.charAt(0).toUpperCase() + id.slice(1)}
+            {navLabels[id] || id.charAt(0).toUpperCase() + id.slice(1)}
           </a>
         ))}
         <button className="rga-nav-cta" style={{ marginTop: 12 }} onClick={() => scrollTo('contact')}>
@@ -1151,7 +1398,7 @@ export default function RiselGrowthAgency() {
               ci: 3
             },
             {
-              icon: <ContentIcon />, name: 'Content Creation', sub: 'Social Media',
+              icon: <CameraIcon />, name: 'Content Creation', sub: 'Social Media',
               desc: 'Professional social media content tailored to your brand. Engaging visuals and captions designed to boost reach, with consistent, high-quality content that drives real results.',
               ci: 2
             },
@@ -1159,6 +1406,11 @@ export default function RiselGrowthAgency() {
               icon: <ConsultIcon />, name: 'Consultancy', sub: 'Social Media',
               desc: 'Expert social media consultancy to help you grow strategically and sustainably. Personalized guidance on content, growth, and platform optimization that turns followers into results.',
               ci: 3
+            },
+            {
+              icon: <WebDevIcon />, name: 'Web Development', sub: 'Full-Stack & Design',
+              desc: 'Professional websites, landing pages, e-commerce stores, and web apps built with modern technologies. Fast, responsive, SEO-optimised, and crafted to convert visitors into customers.',
+              ci: 4
             },
           ].map(({ icon, name, sub, desc, ci }, i) => (
             <div key={i} className={`rga-service-card rga-reveal${i > 0 ? ` rga-reveal-d${Math.min(i, 3)}` : ''}`}
@@ -1173,6 +1425,84 @@ export default function RiselGrowthAgency() {
           ))}
         </div>
 
+      </section>
+
+      {/* ── WEB DEVELOPMENT ── */}
+      <section id="webdev" className="rga-webdev-section">
+        <div className="rga-webdev-inner">
+
+          {/* Left content */}
+          <div className="rga-reveal">
+            <div className="rga-webdev-label">New Service</div>
+            <h2 className="rga-webdev-title">
+              We Build Websites That <span>Win Clients</span>
+            </h2>
+            <p className="rga-webdev-desc">
+              From sleek landing pages to full-scale e-commerce platforms and custom web apps — we design and develop digital experiences that look stunning, load fast, and convert visitors into paying customers.
+            </p>
+
+            <div className="rga-webdev-features">
+              {[
+                { icon: '🌐', title: 'Custom Websites', desc: 'Bespoke design & dev from scratch' },
+                { icon: '🛒', title: 'E-Commerce Stores', desc: 'Shopify, WooCommerce & custom shops' },
+                { icon: '🚀', title: 'Landing Pages', desc: 'High-converting pages that sell' },
+                { icon: '⚡', title: 'Web Applications', desc: 'Scalable apps for your business' },
+                { icon: '📱', title: 'Mobile-First Design', desc: 'Responsive on every device' },
+                { icon: '🔍', title: 'SEO Optimised', desc: 'Built to rank on Google from day one' },
+              ].map(({ icon, title, desc }, i) => (
+                <div key={i} className="rga-webdev-feature rga-reveal" style={{ transitionDelay: `${i * 0.07}s` }}>
+                  <div className="rga-webdev-feature-icon">{icon}</div>
+                  <div className="rga-webdev-feature-text">
+                    <strong>{title}</strong>
+                    <span>{desc}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <button className="rga-webdev-cta" onClick={() => scrollTo('contact')}>
+              Start Your Project →
+            </button>
+          </div>
+
+          {/* Right visual — browser mockup */}
+          <div className="rga-webdev-visual rga-reveal rga-reveal-d1">
+            <div className="rga-webdev-mockup">
+              <div className="rga-webdev-mockup-bar">
+                <div className="rga-webdev-mockup-dots">
+                  <div className="rga-webdev-mockup-dot" style={{ background: '#ef4444' }} />
+                  <div className="rga-webdev-mockup-dot" style={{ background: '#f59e0b' }} />
+                  <div className="rga-webdev-mockup-dot" style={{ background: '#10b981' }} />
+                </div>
+                <div className="rga-webdev-mockup-url">yourwebsite.com</div>
+              </div>
+              <div className="rga-webdev-mockup-body">
+                <div className="rga-webdev-mockup-hero">🚀</div>
+                <div className="rga-webdev-mockup-lines">
+                  <div className="rga-webdev-mockup-line" style={{ width: '70%' }} />
+                  <div className="rga-webdev-mockup-line" style={{ width: '90%' }} />
+                  <div className="rga-webdev-mockup-line" style={{ width: '55%' }} />
+                </div>
+                <div className="rga-webdev-mockup-cards">
+                  <div className="rga-webdev-mockup-card" />
+                  <div className="rga-webdev-mockup-card" />
+                  <div className="rga-webdev-mockup-card" />
+                </div>
+              </div>
+            </div>
+            <div className="rga-webdev-tech-badges">
+              {[
+                { label: 'React', bg: 'rgba(99,226,255,0.15)', color: '#63e2ff' },
+                { label: 'Next.js', bg: 'rgba(255,255,255,0.1)', color: '#fff' },
+                { label: 'Shopify', bg: 'rgba(150,191,75,0.15)', color: '#96bf4b' },
+                { label: 'WordPress', bg: 'rgba(33,117,155,0.15)', color: '#21759b' },
+              ].map(({ label, bg, color }) => (
+                <span key={label} className="rga-webdev-tech-badge" style={{ background: bg, color }}>{label}</span>
+              ))}
+            </div>
+          </div>
+
+        </div>
       </section>
 
       {/* ABOUT SECTION */}
@@ -1450,7 +1780,10 @@ export default function RiselGrowthAgency() {
                 value={form.message} onChange={e => setForm({ ...form, message: e.target.value })} />
             </div>
             {formMsg && <div className={`rga-form-msg ${formMsg.type}`}>{formMsg.text}</div>}
-            <button className="rga-btn-submit" type="submit">Send Message →</button>
+            <button className="rga-btn-submit" type="submit" disabled={isSending}
+              style={isSending ? { opacity: 0.7, cursor: 'not-allowed' } : {}}>
+              {isSending ? 'Sending…' : 'Send Message →'}
+            </button>
           </form>
         </div>
       </section>
