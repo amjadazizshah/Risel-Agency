@@ -1057,6 +1057,215 @@ body {
   .rga-about-heading { font-size: 24px; }
   .rga-contact-heading { font-size: 22px; }
 }
+
+/* ─── Chatbot ─── */
+.rga-chat-fab {
+  position: fixed; bottom: 28px; right: 28px; z-index: 9999;
+  width: 62px; height: 62px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), #e85d2c);
+  border: none; cursor: pointer;
+  box-shadow: 0 8px 32px rgba(255,107,53,0.5);
+  display: flex; align-items: center; justify-content: center;
+  transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s;
+  color: #fff;
+}
+.rga-chat-fab:hover {
+  transform: scale(1.12);
+  box-shadow: 0 14px 44px rgba(255,107,53,0.6);
+}
+.rga-chat-fab-pulse {
+  position: absolute; top: 2px; right: 2px;
+  width: 14px; height: 14px; border-radius: 50%;
+  background: var(--green); border: 2px solid #fff;
+  animation: chatPulse 2s ease-in-out infinite;
+}
+@keyframes chatPulse {
+  0%,100%{transform:scale(1);opacity:1}
+  50%{transform:scale(1.35);opacity:0.65}
+}
+.rga-chat-window {
+  position: fixed; bottom: 104px; right: 28px; z-index: 9998;
+  width: 380px;
+  background: #fff;
+  border-radius: 24px;
+  box-shadow: 0 28px 80px rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.05);
+  display: flex; flex-direction: column; overflow: hidden;
+  transform: translateY(20px) scale(0.94);
+  opacity: 0; pointer-events: none;
+  transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+  max-height: 570px;
+}
+.rga-chat-window.open {
+  transform: translateY(0) scale(1);
+  opacity: 1; pointer-events: all;
+}
+.rga-chat-header {
+  background: linear-gradient(135deg, #0d1b2a 0%, #1e3a5f 100%);
+  padding: 18px 20px;
+  display: flex; align-items: center; gap: 12px;
+  flex-shrink: 0;
+}
+.rga-chat-header-avatar {
+  width: 46px; height: 46px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), #e85d2c);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; flex-shrink: 0;
+  box-shadow: 0 4px 14px rgba(255,107,53,0.4);
+}
+.rga-chat-header-info { flex: 1; }
+.rga-chat-header-name {
+  font-weight: 700; font-size: 15px; color: #fff; line-height: 1.2;
+}
+.rga-chat-header-status {
+  font-size: 11.5px; color: rgba(255,255,255,0.65);
+  display: flex; align-items: center; gap: 5px; margin-top: 3px;
+}
+.rga-chat-status-dot {
+  width: 7px; height: 7px; background: var(--green);
+  border-radius: 50%; flex-shrink: 0;
+  animation: chatPulse 2.5s ease-in-out infinite;
+}
+.rga-chat-header-close {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: rgba(255,255,255,0.1); border: none; cursor: pointer;
+  color: #fff; display: flex; align-items: center; justify-content: center;
+  transition: background 0.2s; flex-shrink: 0;
+}
+.rga-chat-header-close:hover { background: rgba(255,255,255,0.22); }
+.rga-chat-messages {
+  flex: 1; overflow-y: auto; padding: 18px 14px;
+  display: flex; flex-direction: column; gap: 10px;
+  background: #f8f6f3;
+}
+.rga-chat-messages::-webkit-scrollbar { width: 4px; }
+.rga-chat-messages::-webkit-scrollbar-track { background: transparent; }
+.rga-chat-messages::-webkit-scrollbar-thumb { background: #ded9d3; border-radius: 4px; }
+.rga-chat-msg-row {
+  display: flex; align-items: flex-end; gap: 8px;
+}
+.rga-chat-msg-row.user { flex-direction: row-reverse; }
+.rga-chat-bot-avatar {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), #e85d2c);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; flex-shrink: 0;
+}
+.rga-chat-bubble {
+  max-width: 78%; padding: 11px 15px;
+  border-radius: 18px; font-size: 13.5px; line-height: 1.65;
+  animation: bubbleIn 0.28s ease;
+}
+@keyframes bubbleIn {
+  from{opacity:0;transform:translateY(8px) scale(0.95)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+.rga-chat-msg-row.bot .rga-chat-bubble {
+  background:#fff; color:var(--text-dark);
+  border-bottom-left-radius:4px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+}
+.rga-chat-msg-row.user .rga-chat-bubble {
+  background: linear-gradient(135deg, var(--accent), #e85d2c);
+  color:#fff; border-bottom-right-radius:4px;
+}
+.rga-chat-typing {
+  display: flex; align-items: flex-end; gap: 8px;
+}
+.rga-chat-typing-dots {
+  background:#fff; padding:12px 16px;
+  border-radius:18px; border-bottom-left-radius:4px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+  display:flex; gap:5px; align-items:center;
+}
+.rga-chat-typing-dot {
+  width:7px; height:7px; border-radius:50%;
+  background:#ccc; animation: typingDot 1.4s ease-in-out infinite;
+}
+.rga-chat-typing-dot:nth-child(2){animation-delay:0.2s}
+.rga-chat-typing-dot:nth-child(3){animation-delay:0.4s}
+@keyframes typingDot {
+  0%,60%,100%{transform:translateY(0);background:#ccc}
+  30%{transform:translateY(-6px);background:var(--accent)}
+}
+.rga-chat-chips {
+  display:flex; flex-direction:column; gap:7px;
+  padding-left:36px;
+}
+.rga-chat-chip {
+  display:flex; align-items:center; gap:10px;
+  padding:10px 15px; border-radius:12px;
+  border:1.5px solid var(--border); background:#fff;
+  font-size:13px; font-weight:600; color:var(--text-dark);
+  cursor:pointer; transition:all 0.22s; text-align:left;
+  box-shadow:0 2px 8px rgba(0,0,0,0.04);
+  animation: bubbleIn 0.28s ease;
+}
+.rga-chat-chip:hover {
+  border-color:var(--accent); color:var(--accent);
+  background:var(--accent-glow); transform:translateX(5px);
+}
+.rga-chat-actions {
+  display:flex; flex-direction:column; gap:8px;
+  padding-left:36px;
+}
+.rga-chat-action-primary {
+  padding:12px 20px; border-radius:50px;
+  background:linear-gradient(135deg,var(--accent),#e85d2c);
+  color:#fff; font-size:13px; font-weight:700;
+  border:none; cursor:pointer; transition:all 0.25s;
+  box-shadow:0 4px 14px rgba(255,107,53,0.32);
+  text-align:center; width:100%;
+  animation: bubbleIn 0.28s ease;
+}
+.rga-chat-action-primary:hover {
+  transform:translateY(-2px);
+  box-shadow:0 8px 24px rgba(255,107,53,0.44);
+}
+.rga-chat-action-secondary {
+  padding:11px 20px; border-radius:50px;
+  background:transparent; color:var(--text-dark);
+  font-size:13px; font-weight:600;
+  border:1.5px solid var(--border); cursor:pointer;
+  transition:all 0.25s; text-align:center; width:100%;
+  animation: bubbleIn 0.28s ease;
+}
+.rga-chat-action-secondary:hover {
+  border-color:var(--accent); color:var(--accent);
+  background:var(--accent-glow);
+}
+.rga-chat-calendly-card {
+  background:linear-gradient(135deg,#0d1b2a,#1e3a5f);
+  border-radius:16px; padding:18px;
+  display:flex; flex-direction:column; gap:12px;
+  box-shadow:0 8px 28px rgba(0,0,0,0.18);
+  animation: bubbleIn 0.28s ease;
+}
+.rga-chat-calendly-title {
+  font-size:14px; font-weight:700; color:#fff;
+}
+.rga-chat-calendly-desc {
+  font-size:12px; color:rgba(255,255,255,0.6); line-height:1.6;
+}
+.rga-chat-calendly-btn {
+  display:flex; align-items:center; justify-content:center; gap:8px;
+  padding:12px 20px; border-radius:50px;
+  background:linear-gradient(135deg,var(--accent),#e85d2c);
+  color:#fff; font-size:13px; font-weight:700;
+  border:none; cursor:pointer; transition:all 0.25s;
+  text-decoration:none;
+  box-shadow:0 4px 14px rgba(255,107,53,0.4);
+}
+.rga-chat-calendly-btn:hover {
+  transform:translateY(-2px);
+  box-shadow:0 10px 26px rgba(255,107,53,0.5);
+}
+@media(max-width:640px){
+  .rga-chat-window{
+    width:calc(100vw - 24px); right:12px; bottom:88px;
+    max-height:520px;
+  }
+  .rga-chat-fab{right:16px;bottom:20px}
+}
 `;
 
 // ─── SVG Icons ──────────────────────────────────────────────────────────────
@@ -1112,6 +1321,280 @@ const GrowIcon = () => (
     <path d="M9.5 8a4.5 4.5 0 100-9 4.5 4.5 0 000 9z" />
   </svg>
 );
+
+// ─── Chatbot Data ────────────────────────────────────────────────────────────
+const CHAT_SERVICES = [
+  {
+    id: 'instagram',
+    label: '📸 Instagram Growth & DM',
+    detail: `Our Instagram Growth & DM service builds you a genuine, engaged audience organically.
+
+✅ Real follower growth with targeted strategies
+✅ Automated DM systems that convert followers into clients
+✅ Increased reach, visibility & brand trust
+✅ Proven methods used by 200+ brands worldwide`,
+  },
+  {
+    id: 'tiktok',
+    label: '🎵 TikTok Growth',
+    detail: `Grow your TikTok with our proven organic strategies and platform expertise.
+
+✅ Real, engaged TikTok followers
+✅ Viral content strategies & scroll-stopping hooks
+✅ Boosted views, reach & discoverability
+✅ Algorithm-aligned, sustainable growth`,
+  },
+  {
+    id: 'organic',
+    label: '📈 Organic Social Growth',
+    detail: `Multi-platform organic growth across Instagram, TikTok, Facebook & beyond.
+
+✅ Authentic community building across all platforms
+✅ Cross-platform content strategy
+✅ Engagement rate improvement
+✅ Sustainable growth — zero paid ads needed`,
+  },
+  {
+    id: 'content',
+    label: '📷 Content Creation',
+    detail: `Premium social media content crafted to match your brand identity perfectly.
+
+✅ Professional visuals, graphics & reels
+✅ Engaging captions & scroll-stopping copy
+✅ Platform-optimised formats for every channel
+✅ Consistent brand voice & posting schedule`,
+  },
+  {
+    id: 'consultancy',
+    label: '📊 Social Media Consultancy',
+    detail: `Strategic, personalised social media consultancy to accelerate your growth.
+
+✅ Full social media audit & in-depth analysis
+✅ Custom growth roadmap for your brand
+✅ Platform optimisation & content strategy
+✅ Ongoing expert guidance & 1-on-1 support`,
+  },
+  {
+    id: 'webdev',
+    label: '💻 Web Development',
+    detail: `Custom websites, landing pages, e-commerce stores & web apps built to convert.
+
+✅ Bespoke design & full-stack development
+✅ Mobile-first & fully responsive on all devices
+✅ SEO optimised from day one
+✅ React, Next.js, Shopify, WordPress & more`,
+  },
+];
+
+// ─── Chatbot Component ────────────────────────────────────────────────────────
+function Chatbot() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [messages, setMessages] = useState([]);
+  const [isTyping, setIsTyping] = useState(false);
+  const [started, setStarted] = useState(false);
+  const bottomRef = useRef(null);
+  const CALENDLY_URL = 'https://calendly.com/riselgrowthagency'; // ← replace with your Calendly link
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages, isTyping]);
+
+  useEffect(() => {
+    if (isOpen && !started) {
+      setStarted(true);
+      botSay('greeting',
+        `👋 Hey there! Welcome to **Risel Growth Agency**!\n\nI'm your virtual assistant. I'm here to help you discover our services and book a strategy call with our team.\n\nReady to grow your brand? 🚀`,
+        1300
+      );
+    }
+  }, [isOpen]);
+
+  const botSay = (type, text, delay = 950, extra = {}) => {
+    setIsTyping(true);
+    setTimeout(() => {
+      setIsTyping(false);
+      setMessages(prev => [...prev, { from: 'bot', type, text, ...extra }]);
+    }, delay);
+  };
+
+  const userSay = text =>
+    setMessages(prev => [...prev, { from: 'user', type: 'text', text }]);
+
+  const handleStart = () => {
+    userSay("Let's get started! 🚀");
+    botSay('services',
+      "Great! Here are all our services. Tap the one you're interested in and I'll tell you everything about it 👇"
+    );
+  };
+
+  const handleService = svc => {
+    userSay(svc.label);
+    botSay('detail', svc.detail, 1200, { service: svc });
+  };
+
+  const handleBook = () => {
+    userSay("I'd like to book a meeting 📅");
+    botSay('booking',
+      "Awesome! 🎉 Pick a time that works for you — our team is ready to craft a strategy just for your brand.",
+      1000
+    );
+  };
+
+  const handleOtherServices = () => {
+    userSay('Show me other services');
+    botSay('services', 'Of course! Here are all our services:');
+  };
+
+  const handleRestart = () => {
+    userSay('Explore more services');
+    botSay('services', 'No problem! Here are all our services again:');
+  };
+
+  const renderText = text =>
+    text.split(/\*\*(.*?)\*\*/g).map((p, i) =>
+      i % 2 === 1 ? <strong key={i}>{p}</strong> : p
+    );
+
+  return (
+    <>
+      {/* ── Floating button ── */}
+      <button
+        className="rga-chat-fab"
+        onClick={() => setIsOpen(o => !o)}
+        aria-label={isOpen ? 'Close chat' : 'Open chat'}
+      >
+        {isOpen ? (
+          <svg viewBox="0 0 24 24" style={{ width:24,height:24,stroke:'#fff',fill:'none',strokeWidth:2.5 }}>
+            <path d="M18 6L6 18M6 6l12 12" />
+          </svg>
+        ) : (
+          <svg viewBox="0 0 24 24" style={{ width:24,height:24,stroke:'#fff',fill:'none',strokeWidth:2 }}>
+            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+          </svg>
+        )}
+        {!isOpen && <span className="rga-chat-fab-pulse" />}
+      </button>
+
+      {/* ── Chat window ── */}
+      <div className={`rga-chat-window${isOpen ? ' open' : ''}`}>
+
+        {/* Header */}
+        <div className="rga-chat-header">
+          <div className="rga-chat-header-avatar">🚀</div>
+          <div className="rga-chat-header-info">
+            <div className="rga-chat-header-name">Risel Assistant</div>
+            <div className="rga-chat-header-status">
+              <span className="rga-chat-status-dot" />
+              Online · replies instantly
+            </div>
+          </div>
+          <button className="rga-chat-header-close" onClick={() => setIsOpen(false)}
+            aria-label="Close chat">
+            <svg viewBox="0 0 24 24" style={{ width:16,height:16,stroke:'#fff',fill:'none',strokeWidth:2.5 }}>
+              <path d="M18 6L6 18M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        {/* Messages */}
+        <div className="rga-chat-messages">
+          {messages.map((msg, i) => (
+            <div key={i} style={{ display:'flex', flexDirection:'column', gap:8 }}>
+
+              {/* User bubble */}
+              {msg.from === 'user' && (
+                <div className="rga-chat-msg-row user">
+                  <div className="rga-chat-bubble">{msg.text}</div>
+                </div>
+              )}
+
+              {/* Bot bubble */}
+              {msg.from === 'bot' && (
+                <>
+                  <div className="rga-chat-msg-row bot">
+                    <div className="rga-chat-bot-avatar">🚀</div>
+                    <div className="rga-chat-bubble" style={{ whiteSpace:'pre-line' }}>
+                      {renderText(msg.text)}
+                    </div>
+                  </div>
+
+                  {/* Greeting CTA */}
+                  {msg.type === 'greeting' && (
+                    <div style={{ paddingLeft:36 }}>
+                      <button className="rga-chat-action-primary" onClick={handleStart}>
+                        Let's get started 🚀
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Services chips */}
+                  {msg.type === 'services' && (
+                    <div className="rga-chat-chips">
+                      {CHAT_SERVICES.map(svc => (
+                        <button key={svc.id} className="rga-chat-chip"
+                          onClick={() => handleService(svc)}>
+                          {svc.label}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Detail actions */}
+                  {msg.type === 'detail' && (
+                    <div className="rga-chat-actions">
+                      <button className="rga-chat-action-primary" onClick={handleBook}>
+                        📅 Book a Free Meeting
+                      </button>
+                      <button className="rga-chat-action-secondary" onClick={handleOtherServices}>
+                        ← See Other Services
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Booking card */}
+                  {msg.type === 'booking' && (
+                    <div className="rga-chat-actions">
+                      <div className="rga-chat-calendly-card">
+                        <div className="rga-chat-calendly-title">📅 Schedule a Free Strategy Call</div>
+                        <div className="rga-chat-calendly-desc">
+                          Choose a convenient time slot. Our strategy session is completely free — no commitments.
+                        </div>
+                        <a href={CALENDLY_URL} target="_blank" rel="noreferrer"
+                          className="rga-chat-calendly-btn">
+                          <svg viewBox="0 0 24 24" style={{ width:15,height:15,stroke:'#fff',fill:'none',strokeWidth:2 }}>
+                            <rect x="3" y="4" width="18" height="18" rx="2"/>
+                            <path d="M16 2v4M8 2v4M3 10h18"/>
+                          </svg>
+                          Open Calendly Booking
+                        </a>
+                      </div>
+                      <button className="rga-chat-action-secondary" onClick={handleRestart}>
+                        ← Explore More Services
+                      </button>
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+          ))}
+
+          {/* Typing indicator */}
+          {isTyping && (
+            <div className="rga-chat-typing">
+              <div className="rga-chat-bot-avatar">🚀</div>
+              <div className="rga-chat-typing-dots">
+                <div className="rga-chat-typing-dot" />
+                <div className="rga-chat-typing-dot" />
+                <div className="rga-chat-typing-dot" />
+              </div>
+            </div>
+          )}
+          <div ref={bottomRef} />
+        </div>
+      </div>
+    </>
+  );
+}
 
 // ─── Main Component ──────────────────────────────────────────────────────────
 export default function RiselGrowthAgency() {
@@ -1809,6 +2292,9 @@ export default function RiselGrowthAgency() {
         <div className="rga-footer-left">© 2026 Risel Growth Agency — All Rights Reserved</div>
         <div className="rga-footer-right">Crafted with care</div>
       </footer>
+
+      {/* ── CHATBOT ── */}
+      <Chatbot />
     </>
   );
 }
