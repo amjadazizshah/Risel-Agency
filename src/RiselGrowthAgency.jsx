@@ -1393,7 +1393,8 @@ function Chatbot() {
   const [isTyping, setIsTyping] = useState(false);
   const [started, setStarted] = useState(false);
   const bottomRef = useRef(null);
-  const CALENDLY_URL = 'https://calendly.com/riselgrowthagency'; // ← replace with your Calendly link
+  const CALENDLY_URL = 'https://calendly.com/riselgrowthagency/30min
+  '; // ← replace with your Calendly link
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -1464,11 +1465,11 @@ function Chatbot() {
         aria-label={isOpen ? 'Close chat' : 'Open chat'}
       >
         {isOpen ? (
-          <svg viewBox="0 0 24 24" style={{ width:24,height:24,stroke:'#fff',fill:'none',strokeWidth:2.5 }}>
+          <svg viewBox="0 0 24 24" style={{ width: 24, height: 24, stroke: '#fff', fill: 'none', strokeWidth: 2.5 }}>
             <path d="M18 6L6 18M6 6l12 12" />
           </svg>
         ) : (
-          <svg viewBox="0 0 24 24" style={{ width:24,height:24,stroke:'#fff',fill:'none',strokeWidth:2 }}>
+          <svg viewBox="0 0 24 24" style={{ width: 24, height: 24, stroke: '#fff', fill: 'none', strokeWidth: 2 }}>
             <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
           </svg>
         )}
@@ -1490,7 +1491,7 @@ function Chatbot() {
           </div>
           <button className="rga-chat-header-close" onClick={() => setIsOpen(false)}
             aria-label="Close chat">
-            <svg viewBox="0 0 24 24" style={{ width:16,height:16,stroke:'#fff',fill:'none',strokeWidth:2.5 }}>
+            <svg viewBox="0 0 24 24" style={{ width: 16, height: 16, stroke: '#fff', fill: 'none', strokeWidth: 2.5 }}>
               <path d="M18 6L6 18M6 6l12 12" />
             </svg>
           </button>
@@ -1499,7 +1500,7 @@ function Chatbot() {
         {/* Messages */}
         <div className="rga-chat-messages">
           {messages.map((msg, i) => (
-            <div key={i} style={{ display:'flex', flexDirection:'column', gap:8 }}>
+            <div key={i} style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
 
               {/* User bubble */}
               {msg.from === 'user' && (
@@ -1513,14 +1514,14 @@ function Chatbot() {
                 <>
                   <div className="rga-chat-msg-row bot">
                     <div className="rga-chat-bot-avatar">🚀</div>
-                    <div className="rga-chat-bubble" style={{ whiteSpace:'pre-line' }}>
+                    <div className="rga-chat-bubble" style={{ whiteSpace: 'pre-line' }}>
                       {renderText(msg.text)}
                     </div>
                   </div>
 
                   {/* Greeting CTA */}
                   {msg.type === 'greeting' && (
-                    <div style={{ paddingLeft:36 }}>
+                    <div style={{ paddingLeft: 36 }}>
                       <button className="rga-chat-action-primary" onClick={handleStart}>
                         Let's get started 🚀
                       </button>
@@ -1561,9 +1562,9 @@ function Chatbot() {
                         </div>
                         <a href={CALENDLY_URL} target="_blank" rel="noreferrer"
                           className="rga-chat-calendly-btn">
-                          <svg viewBox="0 0 24 24" style={{ width:15,height:15,stroke:'#fff',fill:'none',strokeWidth:2 }}>
-                            <rect x="3" y="4" width="18" height="18" rx="2"/>
-                            <path d="M16 2v4M8 2v4M3 10h18"/>
+                          <svg viewBox="0 0 24 24" style={{ width: 15, height: 15, stroke: '#fff', fill: 'none', strokeWidth: 2 }}>
+                            <rect x="3" y="4" width="18" height="18" rx="2" />
+                            <path d="M16 2v4M8 2v4M3 10h18" />
                           </svg>
                           Open Calendly Booking
                         </a>
@@ -1607,9 +1608,9 @@ export default function RiselGrowthAgency() {
   const [isSending, setIsSending] = useState(false);
 
   // ── EmailJS config ──────────────────────────────────────────────────────────
-  const EMAILJS_SERVICE_ID  = 'service_2cjtfgk';
+  const EMAILJS_SERVICE_ID = 'service_2cjtfgk';
   const EMAILJS_TEMPLATE_ID = 'template_5jdgmdi';
-  const EMAILJS_PUBLIC_KEY  = 'gmwjYtXITk2_uswG8';
+  const EMAILJS_PUBLIC_KEY = 'gmwjYtXITk2_uswG8';
 
   // Inject styles
   useEffect(() => {
@@ -1684,11 +1685,11 @@ export default function RiselGrowthAgency() {
         EMAILJS_SERVICE_ID,
         EMAILJS_TEMPLATE_ID,
         {
-          from_name:    form.name,
-          from_email:   form.email,
-          phone:        form.phone || 'Not provided',
-          message:      form.message,
-          reply_to:     form.email,
+          from_name: form.name,
+          from_email: form.email,
+          phone: form.phone || 'Not provided',
+          message: form.message,
+          reply_to: form.email,
         },
         EMAILJS_PUBLIC_KEY
       );
