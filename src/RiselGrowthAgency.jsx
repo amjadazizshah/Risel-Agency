@@ -1393,8 +1393,7 @@ function Chatbot() {
   const [isTyping, setIsTyping] = useState(false);
   const [started, setStarted] = useState(false);
   const bottomRef = useRef(null);
-  const CALENDLY_URL = 'https://calendly.com/riselgrowthagency/30min
-  '; // ← replace with your Calendly link
+  const CALENDLY_URL = 'https://calendly.com/riselgrowthagency/30min'; // ← replace with your Calendly link
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
