@@ -78,13 +78,18 @@ body {
 
 .rga-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
 .rga-logo-mark {
-  width: 44px; height: 44px; border-radius: 12px;
+  width: 52px; height: 52px; border-radius: 12px;
   display: flex; align-items: center; justify-content: center;
-  background: linear-gradient(135deg, var(--primary), var(--accent));
-  color: #fff; font-family: 'DM Serif Display', serif;
-  font-size: 20px; font-weight: 400;
-  box-shadow: 0 4px 12px rgba(255,107,53,0.25);
+  background: var(--bg);
+  overflow: hidden;
   transition: var(--transition);
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  border: 1px solid var(--border);
+}
+.rga-logo-mark img {
+  width: 100%; height: 100%; 
+  object-fit: cover;
 }
 .rga-logo:hover .rga-logo-mark { transform: scale(1.05); }
 .rga-logo-text {
@@ -1266,6 +1271,294 @@ body {
   }
   .rga-chat-fab{right:16px;bottom:20px}
 }
+
+/* ─── Review System ─── */
+.rga-review-actions {
+  display: flex; gap: 16px; justify-content: center;
+  margin-top: 32px; flex-wrap: wrap;
+}
+.rga-btn-review {
+  padding: 14px 36px; border-radius: 50px;
+  background: linear-gradient(135deg, var(--accent), #e85d2c);
+  color: #fff; font-size: 15px; font-weight: 700;
+  border: none; cursor: pointer; transition: var(--transition);
+  box-shadow: 0 4px 18px rgba(255,107,53,0.3);
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.rga-btn-review:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 28px rgba(255,107,53,0.45);
+}
+.rga-btn-admin {
+  padding: 14px 36px; border-radius: 50px;
+  background: transparent; color: var(--text);
+  font-size: 15px; font-weight: 600;
+  border: 2px solid var(--border); cursor: pointer;
+  transition: var(--transition);
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.rga-btn-admin:hover {
+  border-color: var(--primary); color: var(--primary);
+  background: rgba(30,58,95,0.04);
+}
+
+/* Review Modal Overlay */
+.rga-modal-overlay {
+  position: fixed; inset: 0; z-index: 10000;
+  background: rgba(13,27,42,0.65);
+  backdrop-filter: blur(8px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px;
+  animation: modalFadeIn 0.3s ease;
+}
+@keyframes modalFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.rga-modal {
+  background: #fff; border-radius: 24px;
+  width: 100%; max-width: 560px;
+  max-height: 90vh; overflow-y: auto;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.25);
+  animation: modalSlideIn 0.35s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes modalSlideIn {
+  from { opacity: 0; transform: translateY(30px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.rga-modal-header {
+  padding: 28px 32px 0;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.rga-modal-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 24px; color: var(--text-dark);
+}
+.rga-modal-close {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: var(--bg-section); border: none; cursor: pointer;
+  font-size: 20px; color: var(--text-light);
+  display: flex; align-items: center; justify-content: center;
+  transition: var(--transition);
+}
+.rga-modal-close:hover {
+  background: #fee2e2; color: #ef4444;
+}
+.rga-modal-body { padding: 24px 32px 32px; }
+
+/* Star Rating */
+.rga-star-rating {
+  display: flex; gap: 6px; margin: 8px 0 4px;
+}
+.rga-star-btn {
+  background: none; border: none; cursor: pointer;
+  font-size: 32px; transition: transform 0.15s;
+  color: #e0ddd8; line-height: 1;
+}
+.rga-star-btn.active { color: #f59e0b; }
+.rga-star-btn:hover { transform: scale(1.2); }
+
+/* Review Form Fields */
+.rga-review-form .rga-form-group { margin-bottom: 20px; }
+.rga-review-form .rga-form-label {
+  display: block; font-size: 13px; font-weight: 600;
+  color: var(--text-dark); margin-bottom: 8px;
+  letter-spacing: 0.3px;
+}
+.rga-review-form .rga-form-input,
+.rga-review-form .rga-form-textarea {
+  width: 100%; padding: 14px 18px; border-radius: 12px;
+  border: 1.5px solid var(--border); background: var(--bg-section);
+  font-family: 'Inter', sans-serif; font-size: 14px;
+  color: var(--text-dark); transition: var(--transition);
+  outline: none;
+}
+.rga-review-form .rga-form-input:focus,
+.rga-review-form .rga-form-textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-glow);
+}
+.rga-review-form .rga-form-textarea {
+  min-height: 120px; resize: vertical;
+}
+.rga-review-submit {
+  width: 100%; padding: 16px; border-radius: 14px;
+  background: linear-gradient(135deg, var(--accent), #e85d2c);
+  color: #fff; font-size: 16px; font-weight: 700;
+  border: none; cursor: pointer; transition: var(--transition);
+  box-shadow: 0 6px 20px rgba(255,107,53,0.35);
+  margin-top: 8px;
+}
+.rga-review-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(255,107,53,0.45);
+}
+.rga-review-submit:disabled {
+  opacity: 0.6; cursor: not-allowed; transform: none;
+}
+.rga-review-success {
+  text-align: center; padding: 40px 20px;
+  animation: modalSlideIn 0.4s ease;
+}
+.rga-review-success-icon {
+  font-size: 56px; margin-bottom: 16px;
+}
+.rga-review-success h3 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 22px; color: var(--text-dark); margin-bottom: 8px;
+}
+.rga-review-success p {
+  font-size: 14px; color: var(--text-light); line-height: 1.6;
+}
+
+/* Admin Panel */
+.rga-admin-modal {
+  max-width: 800px;
+}
+.rga-admin-password {
+  text-align: center; padding: 40px 32px;
+}
+.rga-admin-password p {
+  font-size: 14px; color: var(--text-light); margin-bottom: 20px;
+}
+.rga-admin-password input {
+  width: 100%; max-width: 300px; padding: 14px 18px;
+  border-radius: 12px; border: 1.5px solid var(--border);
+  background: var(--bg-section); font-size: 14px;
+  text-align: center; outline: none; transition: var(--transition);
+}
+.rga-admin-password input:focus {
+  border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-glow);
+}
+.rga-admin-password button {
+  display: block; margin: 16px auto 0; padding: 12px 40px;
+  border-radius: 50px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  color: #fff; font-weight: 700; font-size: 14px;
+  border: none; cursor: pointer; transition: var(--transition);
+}
+.rga-admin-password button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(30,58,95,0.3);
+}
+.rga-admin-password .rga-admin-error {
+  color: #ef4444; font-size: 13px; margin-top: 12px;
+}
+.rga-admin-list {
+  display: flex; flex-direction: column; gap: 16px;
+}
+.rga-admin-item {
+  padding: 20px; border-radius: 16px;
+  border: 1px solid var(--border); background: var(--bg-section);
+  transition: var(--transition);
+}
+.rga-admin-item:hover { border-color: rgba(255,107,53,0.3); }
+.rga-admin-item-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 10px;
+}
+.rga-admin-item-info {
+  display: flex; align-items: center; gap: 10px;
+}
+.rga-admin-item-name {
+  font-weight: 700; font-size: 14px; color: var(--text-dark);
+}
+.rga-admin-item-company {
+  font-size: 12px; color: var(--accent); font-weight: 500;
+}
+.rga-admin-item-stars {
+  color: #f59e0b; font-size: 14px; letter-spacing: 1px;
+}
+.rga-admin-item-text {
+  font-size: 13px; color: var(--text); line-height: 1.7;
+  font-style: italic; margin-bottom: 12px;
+}
+.rga-admin-item-actions {
+  display: flex; gap: 8px;
+}
+.rga-admin-btn {
+  padding: 8px 20px; border-radius: 8px;
+  font-size: 12px; font-weight: 700;
+  border: none; cursor: pointer; transition: var(--transition);
+}
+.rga-admin-btn-edit {
+  background: rgba(30,58,95,0.08); color: var(--primary);
+}
+.rga-admin-btn-edit:hover {
+  background: rgba(30,58,95,0.15);
+}
+.rga-admin-btn-delete {
+  background: rgba(239,68,68,0.08); color: #ef4444;
+}
+.rga-admin-btn-delete:hover {
+  background: rgba(239,68,68,0.15);
+}
+.rga-admin-edit-form {
+  margin-top: 12px; padding-top: 12px;
+  border-top: 1px solid var(--border);
+  display: flex; flex-direction: column; gap: 10px;
+}
+.rga-admin-edit-form input,
+.rga-admin-edit-form textarea {
+  width: 100%; padding: 10px 14px; border-radius: 10px;
+  border: 1.5px solid var(--border); background: #fff;
+  font-family: 'Inter', sans-serif; font-size: 13px;
+  color: var(--text-dark); outline: none; transition: var(--transition);
+}
+.rga-admin-edit-form input:focus,
+.rga-admin-edit-form textarea:focus {
+  border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow);
+}
+.rga-admin-edit-form textarea {
+  min-height: 80px; resize: vertical;
+}
+.rga-admin-edit-actions {
+  display: flex; gap: 8px; justify-content: flex-end;
+}
+.rga-admin-btn-save {
+  background: linear-gradient(135deg, var(--accent), #e85d2c);
+  color: #fff; padding: 10px 24px; border-radius: 8px;
+  font-size: 13px; font-weight: 700;
+  border: none; cursor: pointer; transition: var(--transition);
+}
+.rga-admin-btn-save:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(255,107,53,0.3);
+}
+.rga-admin-btn-cancel {
+  background: var(--bg-section); color: var(--text);
+  padding: 10px 24px; border-radius: 8px;
+  font-size: 13px; font-weight: 600;
+  border: 1px solid var(--border); cursor: pointer;
+  transition: var(--transition);
+}
+.rga-admin-btn-cancel:hover {
+  border-color: var(--text-light);
+}
+.rga-admin-empty {
+  text-align: center; padding: 40px; color: var(--text-light);
+  font-size: 14px;
+}
+
+/* Footer admin link */
+.rga-footer-admin {
+  background: none; border: none; cursor: pointer;
+  color: rgba(255,255,255,0.25); font-size: 11px;
+  padding: 2px 6px; transition: color 0.3s;
+}
+.rga-footer-admin:hover { color: rgba(255,255,255,0.6); }
+
+@media(max-width:640px){
+  .rga-modal { margin: 12px; border-radius: 20px; }
+  .rga-modal-header { padding: 20px 20px 0; }
+  .rga-modal-body { padding: 20px; }
+  .rga-modal-title { font-size: 20px; }
+  .rga-admin-modal { max-width: 100%; }
+  .rga-review-actions { flex-direction: column; align-items: stretch; }
+  .rga-btn-review, .rga-btn-admin {
+    justify-content: center; width: 100%;
+  }
+}
 `;
 
 // ─── SVG Icons ──────────────────────────────────────────────────────────────
@@ -1606,6 +1899,79 @@ export default function RiselGrowthAgency() {
   const [formMsg, setFormMsg] = useState(null);
   const [isSending, setIsSending] = useState(false);
 
+  // ── Review System State ──
+  const DEFAULT_REVIEWS = [
+    { id: 1, text: 'Working with Risel Growth Agency was a great experience. They managed our social media with a clear strategy, consistent content planning, and strong audience targeting. We saw noticeable improvement in engagement, reach, and brand visibility.', name: 'Mehdi', company: 'Fleur & Compagnie', rating: 5 },
+    { id: 2, text: 'Risel Growth Agency delivered excellent social media marketing services for our brand. From content strategy to audience engagement, everything was handled professionally. Our follower growth and interaction rate improved steadily.', name: 'Tony', company: 'Adopterz', rating: 5 },
+    { id: 3, text: 'Risel Growth Agency played a key role in enhancing our online presence. Their strategies helped us reach the right audience and build trust with our community. The content planning made a real difference in brand growth.', name: 'Margaux', company: 'Magnifiscience', rating: 5 },
+    { id: 4, text: 'Risel Digital Agency demonstrated strong expertise in social media marketing while working on KFC Pakistan–related campaigns. His strategic content planning and audience-focused approach helped increase engagement and improve overall brand visibility. He understands how to align global brand standards with local market trends.', name: 'Noor', company: 'KFC', rating: 5 },
+    { id: 5, text: 'Risel Digital Agency provided high-quality social media marketing support with a strong focus on brand consistency and engagement. His strategic approach helped improve visibility, audience interaction, and overall performance across platforms. A dedicated professional who understands how to grow brands digitally.', name: 'Ankit Jaitly', company: '365Digital', rating: 5 },
+    { id: 6, text: 'Working with Risel Digital Agency was a smooth and productive experience. He managed social media activities professionally, focusing on consistency, engagement, and performance. His insights into audience behavior and content optimization contributed to stronger reach and better interaction across platforms.', name: 'Michael', company: 'Ean Elliot', rating: 5 },
+  ];
+
+  const [reviews, setReviews] = useState(() => {
+    try {
+      const saved = localStorage.getItem('risel_reviews');
+      return saved ? JSON.parse(saved) : DEFAULT_REVIEWS;
+    } catch { return DEFAULT_REVIEWS; }
+  });
+  const [showReviewForm, setShowReviewForm] = useState(false);
+  const [showAdminPanel, setShowAdminPanel] = useState(false);
+  const [adminAuthed, setAdminAuthed] = useState(false);
+  const [adminPassword, setAdminPassword] = useState('');
+  const [adminError, setAdminError] = useState('');
+  const [editingReviewId, setEditingReviewId] = useState(null);
+  const [editForm, setEditForm] = useState({ name: '', company: '', text: '', rating: 5 });
+  const [reviewForm, setReviewForm] = useState({ name: '', company: '', text: '', rating: 5 });
+  const [reviewSubmitted, setReviewSubmitted] = useState(false);
+  const ADMIN_PASSWORD = 'risel2026';
+
+  // Persist reviews to localStorage
+  useEffect(() => {
+    localStorage.setItem('risel_reviews', JSON.stringify(reviews));
+  }, [reviews]);
+
+  const handleReviewSubmit = () => {
+    if (!reviewForm.name || !reviewForm.text || !reviewForm.rating) return;
+    const newReview = {
+      id: Date.now(),
+      name: reviewForm.name,
+      company: reviewForm.company || '',
+      text: reviewForm.text,
+      rating: reviewForm.rating,
+    };
+    setReviews(prev => [...prev, newReview]);
+    setReviewForm({ name: '', company: '', text: '', rating: 5 });
+    setReviewSubmitted(true);
+    setTimeout(() => { setReviewSubmitted(false); setShowReviewForm(false); }, 2500);
+  };
+
+  const handleAdminLogin = () => {
+    if (adminPassword === ADMIN_PASSWORD) {
+      setAdminAuthed(true);
+      setAdminError('');
+    } else {
+      setAdminError('Incorrect password. Please try again.');
+    }
+  };
+
+  const startEditReview = (review) => {
+    setEditingReviewId(review.id);
+    setEditForm({ name: review.name, company: review.company, text: review.text, rating: review.rating });
+  };
+
+  const saveEditReview = () => {
+    setReviews(prev => prev.map(r => r.id === editingReviewId
+      ? { ...r, name: editForm.name, company: editForm.company, text: editForm.text, rating: editForm.rating }
+      : r
+    ));
+    setEditingReviewId(null);
+  };
+
+  const deleteReview = (id) => {
+    setReviews(prev => prev.filter(r => r.id !== id));
+  };
+
   // ── EmailJS config ──────────────────────────────────────────────────────────
   const EMAILJS_SERVICE_ID = 'service_2cjtfgk';
   const EMAILJS_TEMPLATE_ID = 'template_5jdgmdi';
@@ -1732,18 +2098,9 @@ export default function RiselGrowthAgency() {
       {/* ── NAV ── */}
       <nav className={`rga-nav${navScrolled ? ' scrolled' : ''}`}>
         <a href="#home" className="rga-logo" onClick={e => { e.preventDefault(); scrollTo('home'); }}>
-          <img
-            src={riselLogo}
-            alt="Risel Growth Agency"
-            style={{
-              width: '48px',
-              height: '48px',
-              borderRadius: '12px',
-              objectFit: 'cover',
-              background: '#000',
-              padding: '0px',
-            }}
-          />
+          <div className="rga-logo-mark">
+            <img src={riselLogo} alt="Risel Growth Agency" />
+          </div>
           <div>
             <div className="rga-logo-text">Risel Growth</div>
             <div className="rga-logo-sub">Digital Agency</div>
@@ -2146,7 +2503,7 @@ export default function RiselGrowthAgency() {
           </div>
         </div>
       </section>
-      {/* ── TESTIMONIALS ── */}
+      {/* ── TESTIMONIALS / REVIEWS ── */}
       <section id="reviews" className="rga-section" style={{ background: 'var(--bg-section)' }}>
         <div className="rga-section-header rga-reveal">
           <div className="rga-eyebrow">Client Feedback</div>
@@ -2154,63 +2511,152 @@ export default function RiselGrowthAgency() {
           <p className="rga-section-desc">Don't just take our word for it — hear from the brands we've helped grow.</p>
         </div>
         <div className="rga-testi-grid">
-          {[
-            {
-              text: 'Working with Risel Growth Agency was a great experience. They managed our social media with a clear strategy, consistent content planning, and strong audience targeting. We saw noticeable improvement in engagement, reach, and brand visibility.',
-              name: 'Mehdi', company: 'Fleur & Compagnie',
-              logo: fleurLogo, logoPad: '8px'
-            },
-            {
-              text: 'Risel Growth Agency delivered excellent social media marketing services for our brand. From content strategy to audience engagement, everything was handled professionally. Our follower growth and interaction rate improved steadily.',
-              name: 'Tony', company: 'Adopterz',
-              logo: adopterzLogo, logoPad: '3px'
-            },
-            {
-              text: 'Risel Growth Agency played a key role in enhancing our online presence. Their strategies helped us reach the right audience and build trust with our community. The content planning made a real difference in brand growth.',
-              name: 'Margaux', company: 'Magnifiscience',
-              logo: magnifiscienceLogo, logoPad: '5px'
-            },
-            {
-              text: 'Risel Digital Agency demonstrated strong expertise in social media marketing while working on KFC Pakistan–related campaigns. His strategic content planning and audience-focused approach helped increase engagement and improve overall brand visibility. He understands how to align global brand standards with local market trends.',
-              name: 'Noor', company: 'KFC',
-              logo: kfcLogo, logoPad: '6px'
-            },
-            {
-              text: 'Risel Digital Agency provided high-quality social media marketing support with a strong focus on brand consistency and engagement. His strategic approach helped improve visibility, audience interaction, and overall performance across platforms. A dedicated professional who understands how to grow brands digitally.',
-              name: 'Ankit Jaitly', company: '365Digital',
-              logo: logo365, logoPad: '8px'
-            },
-            {
-              text: 'Working with Risel Digital Agency was a smooth and productive experience. He managed social media activities professionally, focusing on consistency, engagement, and performance. His insights into audience behavior and content optimization contributed to stronger reach and better interaction across platforms.',
-              name: 'Michael', company: 'Ean Elliot',
-              logo: eanElliotLogo, logoPad: '8px'
-            },
-          ].map(({ text, name, company, logo, logoPad }, i) => (
-            <div key={i} className={`rga-testi-card rga-reveal${i > 0 ? ` rga-reveal-d${i}` : ''}`}>
-              <div className="rga-testi-stars">★★★★★</div>
-              <p className="rga-testi-text">"{text}"</p>
+          {reviews.map((review, i) => (
+            <div key={review.id} className={`rga-testi-card rga-reveal${i > 0 ? ` rga-reveal-d${Math.min(i, 5)}` : ''}`}>
+              <div className="rga-testi-stars">{'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}</div>
+              <p className="rga-testi-text">"{review.text}"</p>
               <div className="rga-testi-author">
-                <div className="rga-testi-avatar">
-                  <img
-                    src={logo}
-                    alt={company}
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'contain',
-                      padding: logoPad,
-                    }}
-                  />
+                <div className="rga-testi-avatar" style={{
+                  background: `linear-gradient(135deg, ${['#ff6b35','#1e3a5f','#f59e0b','#10b981','#6366f1','#e85d2c'][i % 6]}, ${['#e85d2c','#2a5a8f','#d97706','#059669','#4f46e5','#ff6b35'][i % 6]})`,
+                  color: '#fff', fontWeight: 700, fontSize: '18px',
+                }}>
+                  {review.name.charAt(0).toUpperCase()}
                 </div>
                 <div>
-                  <div className="rga-testi-name">{name}</div>
-                  <div className="rga-testi-company">{company}</div>
+                  <div className="rga-testi-name">{review.name}</div>
+                  {review.company && <div className="rga-testi-company">{review.company}</div>}
                 </div>
               </div>
             </div>
           ))}
         </div>
+        <div className="rga-review-actions rga-reveal">
+          <button className="rga-btn-review" onClick={() => setShowReviewForm(true)}>
+            ✍️ Leave a Review
+          </button>
+        </div>
       </section>
+
+      {/* ── REVIEW FORM MODAL ── */}
+      {showReviewForm && (
+        <div className="rga-modal-overlay" onClick={(e) => { if (e.target === e.currentTarget) { setShowReviewForm(false); setReviewSubmitted(false); } }}>
+          <div className="rga-modal">
+            <div className="rga-modal-header">
+              <h3 className="rga-modal-title">{reviewSubmitted ? '' : 'Share Your Experience'}</h3>
+              <button className="rga-modal-close" onClick={() => { setShowReviewForm(false); setReviewSubmitted(false); }}>✕</button>
+            </div>
+            <div className="rga-modal-body">
+              {reviewSubmitted ? (
+                <div className="rga-review-success">
+                  <div className="rga-review-success-icon">🎉</div>
+                  <h3>Thank You!</h3>
+                  <p>Your review has been submitted successfully. We truly appreciate your feedback!</p>
+                </div>
+              ) : (
+                <div className="rga-review-form">
+                  <div className="rga-form-group">
+                    <label className="rga-form-label">Your Name *</label>
+                    <input className="rga-form-input" type="text" placeholder="Enter your name"
+                      value={reviewForm.name} onChange={e => setReviewForm({ ...reviewForm, name: e.target.value })} />
+                  </div>
+                  <div className="rga-form-group">
+                    <label className="rga-form-label">Company / Brand</label>
+                    <input className="rga-form-input" type="text" placeholder="Your company name (optional)"
+                      value={reviewForm.company} onChange={e => setReviewForm({ ...reviewForm, company: e.target.value })} />
+                  </div>
+                  <div className="rga-form-group">
+                    <label className="rga-form-label">Rating *</label>
+                    <div className="rga-star-rating">
+                      {[1,2,3,4,5].map(star => (
+                        <button key={star} type="button"
+                          className={`rga-star-btn${reviewForm.rating >= star ? ' active' : ''}`}
+                          onClick={() => setReviewForm({ ...reviewForm, rating: star })}>★</button>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="rga-form-group">
+                    <label className="rga-form-label">Your Review *</label>
+                    <textarea className="rga-form-textarea" placeholder="Tell us about your experience working with Risel..."
+                      value={reviewForm.text} onChange={e => setReviewForm({ ...reviewForm, text: e.target.value })} />
+                  </div>
+                  <button className="rga-review-submit" onClick={handleReviewSubmit}
+                    disabled={!reviewForm.name || !reviewForm.text}>
+                    Submit Review →
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── ADMIN PANEL MODAL ── */}
+      {showAdminPanel && (
+        <div className="rga-modal-overlay" onClick={(e) => { if (e.target === e.currentTarget) { setShowAdminPanel(false); setAdminAuthed(false); setAdminPassword(''); setAdminError(''); setEditingReviewId(null); } }}>
+          <div className="rga-modal rga-admin-modal">
+            <div className="rga-modal-header">
+              <h3 className="rga-modal-title">Manage Reviews</h3>
+              <button className="rga-modal-close" onClick={() => { setShowAdminPanel(false); setAdminAuthed(false); setAdminPassword(''); setAdminError(''); setEditingReviewId(null); }}>✕</button>
+            </div>
+            <div className="rga-modal-body">
+              {!adminAuthed ? (
+                <div className="rga-admin-password">
+                  <p>Enter the admin password to manage reviews.</p>
+                  <input type="password" placeholder="Enter password"
+                    value={adminPassword}
+                    onChange={e => setAdminPassword(e.target.value)}
+                    onKeyDown={e => { if (e.key === 'Enter') handleAdminLogin(); }} />
+                  <button onClick={handleAdminLogin}>Unlock</button>
+                  {adminError && <div className="rga-admin-error">{adminError}</div>}
+                </div>
+              ) : (
+                <div className="rga-admin-list">
+                  {reviews.length === 0 && <div className="rga-admin-empty">No reviews yet.</div>}
+                  {reviews.map(review => (
+                    <div key={review.id} className="rga-admin-item">
+                      <div className="rga-admin-item-header">
+                        <div className="rga-admin-item-info">
+                          <span className="rga-admin-item-name">{review.name}</span>
+                          {review.company && <span className="rga-admin-item-company">— {review.company}</span>}
+                        </div>
+                        <div className="rga-admin-item-stars">{'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}</div>
+                      </div>
+                      <div className="rga-admin-item-text">"{review.text}"</div>
+                      {editingReviewId === review.id ? (
+                        <div className="rga-admin-edit-form">
+                          <input placeholder="Name" value={editForm.name}
+                            onChange={e => setEditForm({ ...editForm, name: e.target.value })} />
+                          <input placeholder="Company" value={editForm.company}
+                            onChange={e => setEditForm({ ...editForm, company: e.target.value })} />
+                          <div className="rga-star-rating" style={{ margin: '4px 0' }}>
+                            {[1,2,3,4,5].map(star => (
+                              <button key={star} type="button"
+                                className={`rga-star-btn${editForm.rating >= star ? ' active' : ''}`}
+                                style={{ fontSize: '24px' }}
+                                onClick={() => setEditForm({ ...editForm, rating: star })}>★</button>
+                            ))}
+                          </div>
+                          <textarea placeholder="Review text" value={editForm.text}
+                            onChange={e => setEditForm({ ...editForm, text: e.target.value })} />
+                          <div className="rga-admin-edit-actions">
+                            <button className="rga-admin-btn-cancel" onClick={() => setEditingReviewId(null)}>Cancel</button>
+                            <button className="rga-admin-btn-save" onClick={saveEditReview}>Save Changes</button>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="rga-admin-item-actions">
+                          <button className="rga-admin-btn rga-admin-btn-edit" onClick={() => startEditReview(review)}>✏️ Edit</button>
+                          <button className="rga-admin-btn rga-admin-btn-delete" onClick={() => deleteReview(review.id)}>🗑️ Delete</button>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ── CONTACT ── */}
       <section id="contact" className="rga-section" style={{ background: 'var(--bg)' }}>
@@ -2290,7 +2736,10 @@ export default function RiselGrowthAgency() {
       {/* ── FOOTER ── */}
       <footer className="rga-footer">
         <div className="rga-footer-left">© 2026 Risel Growth Agency — All Rights Reserved</div>
-        <div className="rga-footer-right">Crafted with care</div>
+        <div className="rga-footer-right">
+          Crafted with care
+          <button className="rga-footer-admin" onClick={() => setShowAdminPanel(true)}>Manage Reviews</button>
+        </div>
       </footer>
 
       {/* ── CHATBOT ── */}
