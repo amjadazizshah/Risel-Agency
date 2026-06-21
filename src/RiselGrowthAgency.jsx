@@ -2517,7 +2517,7 @@ export default function RiselGrowthAgency() {
               <p className="rga-testi-text">"{review.text}"</p>
               <div className="rga-testi-author">
                 <div className="rga-testi-avatar" style={{
-                  background: `linear-gradient(135deg, ${['#ff6b35','#1e3a5f','#f59e0b','#10b981','#6366f1','#e85d2c'][i % 6]}, ${['#e85d2c','#2a5a8f','#d97706','#059669','#4f46e5','#ff6b35'][i % 6]})`,
+                  background: `linear-gradient(135deg, ${['#ff6b35', '#1e3a5f', '#f59e0b', '#10b981', '#6366f1', '#e85d2c'][i % 6]}, ${['#e85d2c', '#2a5a8f', '#d97706', '#059669', '#4f46e5', '#ff6b35'][i % 6]})`,
                   color: '#fff', fontWeight: 700, fontSize: '18px',
                 }}>
                   {review.name.charAt(0).toUpperCase()}
@@ -2567,7 +2567,7 @@ export default function RiselGrowthAgency() {
                   <div className="rga-form-group">
                     <label className="rga-form-label">Rating *</label>
                     <div className="rga-star-rating">
-                      {[1,2,3,4,5].map(star => (
+                      {[1, 2, 3, 4, 5].map(star => (
                         <button key={star} type="button"
                           className={`rga-star-btn${reviewForm.rating >= star ? ' active' : ''}`}
                           onClick={() => setReviewForm({ ...reviewForm, rating: star })}>★</button>
@@ -2629,7 +2629,7 @@ export default function RiselGrowthAgency() {
                           <input placeholder="Company" value={editForm.company}
                             onChange={e => setEditForm({ ...editForm, company: e.target.value })} />
                           <div className="rga-star-rating" style={{ margin: '4px 0' }}>
-                            {[1,2,3,4,5].map(star => (
+                            {[1, 2, 3, 4, 5].map(star => (
                               <button key={star} type="button"
                                 className={`rga-star-btn${editForm.rating >= star ? ' active' : ''}`}
                                 style={{ fontSize: '24px' }}
@@ -2723,7 +2723,7 @@ export default function RiselGrowthAgency() {
         <h2 className="rga-section-title">Follow <span>Us</span></h2>
         <div className="rga-social-btns">
           {[
-            { icon: <InstagramIcon />, label: 'Instagram', href: 'https://www.instagram.com/riselgrowthagency' },
+            { icon: <InstagramIcon />, label: 'Instagram', href: 'https://www.instagram.com/risel.growth.agency' },
             { icon: <TikTokIcon />, label: 'TikTok', href: 'https://www.tiktok.com/@riselgrowthagency' },
           ].map(({ icon, label, href }) => (
             <a key={label} className="rga-social-btn" href={href} target="_blank" rel="noreferrer">
