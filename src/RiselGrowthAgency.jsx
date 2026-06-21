@@ -1574,12 +1574,7 @@ const TikTokIcon = () => (
     <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.77 0 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.34 6.34 0 104.54 6.09V9.65a8.27 8.27 0 004.85 1.56V7.77a4.85 4.85 0 01-1.08-.08z" />
   </svg>
 );
-const ContentIcon = () => (
-  <svg viewBox="0 0 24 24" style={{ width: 24, height: 24, stroke: 'currentColor', fill: 'none', strokeWidth: 1.5 }}>
-    <rect x="2" y="3" width="20" height="14" rx="2" />
-    <path d="M8 21h8M12 17v4" />
-  </svg>
-);
+
 const CameraIcon = () => (
   <svg viewBox="0 0 24 24" style={{ width: 24, height: 24, stroke: 'currentColor', fill: 'none', strokeWidth: 1.5 }}>
     <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z" />
@@ -1692,15 +1687,6 @@ function Chatbot() {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isTyping]);
 
-  useEffect(() => {
-    if (isOpen && !started) {
-      setStarted(true);
-      botSay('greeting',
-        `👋 Hey there! Welcome to **Risel Growth Agency**!\n\nI'm your virtual assistant. I'm here to help you discover our services and book a strategy call with our team.\n\nReady to grow your brand? 🚀`,
-        1300
-      );
-    }
-  }, [isOpen]);
 
   const botSay = (type, text, delay = 950, extra = {}) => {
     setIsTyping(true);
@@ -1753,7 +1739,16 @@ function Chatbot() {
       {/* ── Floating button ── */}
       <button
         className="rga-chat-fab"
-        onClick={() => setIsOpen(o => !o)}
+        onClick={() => {
+          setIsOpen(!isOpen);
+          if (!isOpen && !started) {
+            setStarted(true);
+            botSay('greeting',
+              `👋 Hey there! Welcome to **Risel Growth Agency**!\n\nI'm your virtual assistant. I'm here to help you discover our services and book a strategy call with our team.\n\nReady to grow your brand? 🚀`,
+              1300
+            );
+          }
+        }}
         aria-label={isOpen ? 'Close chat' : 'Open chat'}
       >
         {isOpen ? (
@@ -1973,10 +1968,9 @@ export default function RiselGrowthAgency() {
   };
 
   // ── EmailJS config ──────────────────────────────────────────────────────────
-  const EMAILJS_SERVICE_ID = 'service_2cjtfgk';
-  const EMAILJS_TEMPLATE_ID = 'template_5jdgmdi';
-  const EMAILJS_PUBLIC_KEY = 'gmwjYtXITk2_uswG8';
-
+  const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID || 'service_2cjtfgk';
+  const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || 'template_5jdgmdi';
+  const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || 'gmwjYtXITk2_uswG8';
   // Inject styles
   useEffect(() => {
     const el = document.createElement('style');
@@ -2555,13 +2549,13 @@ export default function RiselGrowthAgency() {
               ) : (
                 <div className="rga-review-form">
                   <div className="rga-form-group">
-                    <label className="rga-form-label">Your Name *</label>
-                    <input className="rga-form-input" type="text" placeholder="Enter your name"
+                    <label htmlFor="review-name" className="rga-form-label">Your Name *</label>
+                    <input id="review-name" className="rga-form-input" type="text" placeholder="Enter your name"
                       value={reviewForm.name} onChange={e => setReviewForm({ ...reviewForm, name: e.target.value })} />
                   </div>
                   <div className="rga-form-group">
-                    <label className="rga-form-label">Company / Brand</label>
-                    <input className="rga-form-input" type="text" placeholder="Your company name (optional)"
+                    <label htmlFor="review-company" className="rga-form-label">Company / Brand</label>
+                    <input id="review-company" className="rga-form-input" type="text" placeholder="Your company name (optional)"
                       value={reviewForm.company} onChange={e => setReviewForm({ ...reviewForm, company: e.target.value })} />
                   </div>
                   <div className="rga-form-group">
@@ -2575,8 +2569,8 @@ export default function RiselGrowthAgency() {
                     </div>
                   </div>
                   <div className="rga-form-group">
-                    <label className="rga-form-label">Your Review *</label>
-                    <textarea className="rga-form-textarea" placeholder="Tell us about your experience working with Risel..."
+                    <label htmlFor="review-text" className="rga-form-label">Your Review *</label>
+                    <textarea id="review-text" className="rga-form-textarea" placeholder="Tell us about your experience working with Risel..."
                       value={reviewForm.text} onChange={e => setReviewForm({ ...reviewForm, text: e.target.value })} />
                   </div>
                   <button className="rga-review-submit" onClick={handleReviewSubmit}
@@ -2688,24 +2682,24 @@ export default function RiselGrowthAgency() {
           <form className="rga-form rga-reveal" onSubmit={handleSubmit}>
             <div className="rga-form-row">
               <div className="rga-form-group">
-                <label className="rga-form-label">Your Name *</label>
-                <input className="rga-form-input" type="text" placeholder="Enter your name"
+                <label htmlFor="contact-name" className="rga-form-label">Your Name *</label>
+                <input id="contact-name" className="rga-form-input" type="text" placeholder="Enter your name"
                   value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} />
               </div>
               <div className="rga-form-group">
-                <label className="rga-form-label">Your Email *</label>
-                <input className="rga-form-input" type="email" placeholder="Enter your email"
+                <label htmlFor="contact-email" className="rga-form-label">Your Email *</label>
+                <input id="contact-email" className="rga-form-input" type="email" placeholder="Enter your email"
                   value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} />
               </div>
             </div>
             <div className="rga-form-group">
-              <label className="rga-form-label">Phone Number</label>
-              <input className="rga-form-input" type="tel" placeholder="Enter your phone"
+              <label htmlFor="contact-phone" className="rga-form-label">Phone Number</label>
+              <input id="contact-phone" className="rga-form-input" type="tel" placeholder="Enter your phone"
                 value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} />
             </div>
             <div className="rga-form-group">
-              <label className="rga-form-label">Your Message *</label>
-              <textarea className="rga-form-textarea" placeholder="Tell us about your project..."
+              <label htmlFor="contact-message" className="rga-form-label">Your Message *</label>
+              <textarea id="contact-message" className="rga-form-textarea" placeholder="Tell us about your project..."
                 value={form.message} onChange={e => setForm({ ...form, message: e.target.value })} />
             </div>
             {formMsg && <div className={`rga-form-msg ${formMsg.type}`}>{formMsg.text}</div>}
